@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clustering.Tests", "Clustering.Tests\Clustering.Tests.csproj", "{8D2B8888-A92E-4764-8F7F-32FFF05355B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clustering.App", "Clustering.App\Clustering.App.csproj", "{2E88DC91-7987-4C7C-8670-3521DD4C9519}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clustering.Model", "Clustering.Model\Clustering.Model.csproj", "{A4CE9C70-B129-433D-AD21-BCC407D0A1B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D2B8888-A92E-4764-8F7F-32FFF05355B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2B8888-A92E-4764-8F7F-32FFF05355B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2B8888-A92E-4764-8F7F-32FFF05355B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2B8888-A92E-4764-8F7F-32FFF05355B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E88DC91-7987-4C7C-8670-3521DD4C9519}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E88DC91-7987-4C7C-8670-3521DD4C9519}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E88DC91-7987-4C7C-8670-3521DD4C9519}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E88DC91-7987-4C7C-8670-3521DD4C9519}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4CE9C70-B129-433D-AD21-BCC407D0A1B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4CE9C70-B129-433D-AD21-BCC407D0A1B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4CE9C70-B129-433D-AD21-BCC407D0A1B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4CE9C70-B129-433D-AD21-BCC407D0A1B3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
