@@ -178,6 +178,8 @@
     <Compile Include="Api\Controllers\SeedController.cs" />
     <Compile Include="Api\Shared\Algorithms\KMeans\KMAlgorithm.cs" />
     <Compile Include="Api\Shared\Algorithms\KMeans\KMDataPoint.cs" />
+    <Compile Include="Api\Shared\Algorithms\Shared\Helpers.cs" />
+    <Compile Include="Api\Shared\Algorithms\Shared\Normalisation.cs" />
     <Compile Include="Api\Shared\ApiResults\ApiBadRequestResult.cs" />
     <Compile Include="Api\Shared\ApiResults\ApiNotFoundResult.cs" />
     <Compile Include="Api\Shared\ApiResults\ApiOkResult.cs" />

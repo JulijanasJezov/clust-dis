@@ -35,7 +35,7 @@ namespace Clustering.App.Api.Controllers
 
             var km = new KMAlgorithm();
 
-            var clusterGroupAssignedData = km.RunKMeansAlgorithm(dataPoints);
+            var clusterGroupAssignedData = km.ClusterData(dataPoints);
 
             var clusteredData = clusterGroupAssignedData
                 .GroupBy(s => s.Cluster)
