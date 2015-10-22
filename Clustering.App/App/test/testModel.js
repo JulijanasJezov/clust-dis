@@ -39,7 +39,6 @@
                 var chartSerie = [cluster.name, calculateAverage(cluster.dataPoints)];
                 return chartSerie;
             });
-            debugger;
             
             exports.delegate.showValidity(columnData);
         };
