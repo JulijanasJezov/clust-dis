@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace Clustering.App.Api.Shared.Algorithms
 {
@@ -11,6 +8,7 @@ namespace Clustering.App.Api.Shared.Algorithms
         public string LastName { get; set; }
         public IDictionary<string, double> Properties { get; set; }
         public int Cluster { get; set; }
+        public double Silhouette { get; set; }
 
         public KMDataPoint(IDictionary<string, double> properties, string firstName, string lastName)
         {

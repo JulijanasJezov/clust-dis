@@ -1,5 +1,5 @@
 ﻿define([], function() {
-    return function chartSeriesModel(data) {
+    return function scatterSeriesModel(data) {
         var exports = this;
 
         exports.name = data.name;

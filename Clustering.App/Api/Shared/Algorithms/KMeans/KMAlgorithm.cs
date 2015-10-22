@@ -1,8 +1,6 @@
-﻿using Clustering.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Clustering.App.Api.Shared.Algorithms
 {
@@ -11,9 +9,9 @@ namespace Clustering.App.Api.Shared.Algorithms
         private List<KMDataPoint> rawDataToCluster = new List<KMDataPoint>();
         private List<KMDataPoint> normalizedDataToCluster = new List<KMDataPoint>();
         private List<KMDataPoint> clusters = new List<KMDataPoint>();
-        private int numberOfClusters = 3;
+        private int numberOfClusters = 20;
 
-        public List<KMDataPoint> ClusterData(List<KMDataPoint> dataPoints)
+        public List<KMDataPoint> ClusterData(List<KMDataPoint> dataPoints, bool calculateSilhouette = false)
         {
             rawDataToCluster = dataPoints;
 
@@ -38,6 +36,16 @@ namespace Clustering.App.Api.Shared.Algorithms
                 iteration++;
             }
 
+            if (calculateSilhouette)
+            {
+                var silhouetteData = Validation.CalculateSilhouette(normalizedDataToCluster);
+
+                for(var dp = 0; dp < silhouetteData.Count(); dp++)
+                {
+                    rawDataToCluster[dp].Silhouette = silhouetteData[dp].Silhouette;
+                }
+            }
+            
             return rawDataToCluster;
         }
         
@@ -102,9 +110,9 @@ namespace Clustering.App.Api.Shared.Algorithms
 
             var distances = new double[numberOfClusters];
             
-            for (int dataPoint = 0; dataPoint < normalizedDataToCluster.Count; ++dataPoint)
+            for (int dataPoint = 0; dataPoint < normalizedDataToCluster.Count; dataPoint++)
             {
-                for (int clusterIndex = 0; clusterIndex < numberOfClusters; ++clusterIndex)
+                for (int clusterIndex = 0; clusterIndex < numberOfClusters; clusterIndex++)
                 {
                     distances[clusterIndex] = Helpers.EuclideanDistance(normalizedDataToCluster[dataPoint], clusters[clusterIndex]);
                 }

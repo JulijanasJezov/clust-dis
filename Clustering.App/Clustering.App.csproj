@@ -106,7 +106,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App\shared\chartSeriesModel.js" />
+    <Content Include="App\shared\columnDataModel.js" />
+    <Content Include="App\shared\scatterSeriesModel.js" />
     <Content Include="App\shared\guajax.js" />
     <Content Include="App\main.js" />
     <Content Include="App\shell.html" />
@@ -180,6 +181,7 @@
     <Compile Include="Api\Shared\Algorithms\KMeans\KMDataPoint.cs" />
     <Compile Include="Api\Shared\Algorithms\Shared\Helpers.cs" />
     <Compile Include="Api\Shared\Algorithms\Shared\Normalisation.cs" />
+    <Compile Include="Api\Shared\Algorithms\Shared\Validation.cs" />
     <Compile Include="Api\Shared\ApiResults\ApiBadRequestResult.cs" />
     <Compile Include="Api\Shared\ApiResults\ApiNotFoundResult.cs" />
     <Compile Include="Api\Shared\ApiResults\ApiOkResult.cs" />

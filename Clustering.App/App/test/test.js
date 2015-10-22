@@ -69,7 +69,43 @@
         }
     };
 
-    
+    model().delegate.showValidity = function(data) {
+        new Highcharts.Chart({
+            chart: {
+                type: 'column',
+                renderTo: "validityChart"
+            },
+            title: {
+                text: 'Silhouette'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Silhouette'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: 'Silhouette: <b>{point.y:.1f}</b>'
+            },
+            series: [{
+                name: 'Silhouette',
+                data: data
+            }]
+        });
+    };
 
     return {
         activate: activate,

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Http;
 
 namespace Clustering.App.Api.Controllers
@@ -11,7 +10,7 @@ namespace Clustering.App.Api.Controllers
     public class ClusteringController : BaseController
     {
         [Route("test")]
-        public IHttpActionResult GetAgeDepressionClusters()
+        public IHttpActionResult GetAgeDepressionClusters(bool calculateSilhouette = true)
         {
             var people = Db.People
                 .Where(s => s.DepressionLevel.HasValue)
@@ -35,7 +34,7 @@ namespace Clustering.App.Api.Controllers
 
             var km = new KMAlgorithm();
 
-            var clusterGroupAssignedData = km.ClusterData(dataPoints);
+            var clusterGroupAssignedData = km.ClusterData(dataPoints, calculateSilhouette);
 
             var clusteredData = clusterGroupAssignedData
                 .GroupBy(s => s.Cluster)
