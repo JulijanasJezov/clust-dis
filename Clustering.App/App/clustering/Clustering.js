@@ -11,7 +11,7 @@
     })
     .map([
         {
-            route: [":id"],
+            route: ["", ":id"],
             moduleId: "test/test",
             title: "Test",
             tab: "cluster"
@@ -33,7 +33,7 @@
     };
 
     var _fetchDiseaseTabs = function() {
-        return guajax.get("api/clustering/diseases")
+        return guajax.get("api/diseases")
         .then(function(response) {
             diseaseTabs(response.data);
 

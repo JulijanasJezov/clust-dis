@@ -22,6 +22,11 @@ namespace Clustering.App.Api.Controllers
             return new ApiOkResult(Request);
         }
 
+        public IHttpActionResult ApiNotFound()
+        {
+            return new ApiNotFoundResult(Request);
+        }
+
         public IHttpActionResult ApiBadRequest(string message)
         {
             return new ApiBadRequestResult(Request, message);

@@ -1,4 +1,5 @@
 ﻿using Clustering.App.Api.Shared.Algorithms;
+using Clustering.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,24 +7,19 @@ using System.Web.Http;
 
 namespace Clustering.App.Api.Controllers
 {
-
     [RoutePrefix("api/clustering")]
     public class ClusteringController : BaseController
     {
-        [Route("diseases")]
-        public IHttpActionResult GetDiseases()
-        {
-            var diseases = Db.Diseases.ToList();
-
-            return ApiOk(diseases);
-        }
-
         [Route("test")]
-        public IHttpActionResult GetAgeDepressionClusters(bool calculateSilhouette = true)
+        public IHttpActionResult PostClusterData(ClusterDataApiModel clusterData, bool calculateSilhouette = true)
         {
-            var people = Db.People
-                .Where(s => s.PersonDiseaseProperties.Where(a => a.DiseasePropertyId == 1).Any())
+            //TODO
+            var people = Db.People.Where(s => s.PersonDiseaseProperties
+                .Where(a => a.DiseaseProperty.DiseaseId == clusterData.ClusterDiseaseId).Any())
                 .ToList();
+
+            var clusterProperties = Db.DiseaseProperties
+                .Where(s => clusterData.ClusterPropertyIds.Contains(s.DiseasePropertyId));
 
             var dataPoints = new List<KMDataPoint>();
 
@@ -37,9 +33,15 @@ namespace Clustering.App.Api.Controllers
                     {"age", age }
                 };
 
-                foreach (var property in person.PersonDiseaseProperties)
+                foreach (var property in clusterProperties)
                 {
-                    properties.Add(property.DiseaseProperty.Name, property.Score);
+                    var score = person.PersonDiseaseProperties
+                        .Where(s => s.DiseasePropertyId == property.DiseasePropertyId)
+                        .Select(s => s.Score)
+                        .SingleOrDefault();
+
+                    // or discard?
+                    properties.Add(property.Name, score);
                 }
 
                 dataPoints.Add(new KMDataPoint(properties, person.FirstName, person.LastName));

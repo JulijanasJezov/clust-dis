@@ -1,9 +1,26 @@
 ﻿<div data-bind="with: model()" class="container-fluid">
     <div class="row">
-        <button class="btn btn-default" data-bind="click: showGraph">Show Graph</button>
+        <div class="col-md-3">
+            <table class="table">
+                <tr>
+                    <th>Property</th>
+                    <th>Include</th>
+                </tr>
+                <!-- ko foreach: diseaseProperties() -->
+                <tr>
+                    <td data-bind="text: name"></td>
+                    <td><input type="checkbox" data-bind="value: diseasePropertyId, checked: $parent.clusterPropertyIds" /></td>
+                </tr>
+                <!-- /ko -->
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <button class="btn btn-default" data-bind="enable: clusterPropertyIds().length > 1, click: showGraph">Show Graph</button>
         <button class="btn btn-default" data-bind="visible: clusteredData(), click: showValidity">Show Validity</button>
     </div>
-    
+
     <div class="row">
         <div class="col-md-2">
             <!-- ko if: clusteredData() -->
@@ -16,13 +33,13 @@
                 </div>
             </div>
             <!-- /ko -->
-            
+
         </div>
         <div class="col-md-8">
             <div id="chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
         </div>
     </div>
-    
+
     <div class="row">
         <div id="validityChart" style="min-width: 300px; height: 400px; max-width: 800px; margin: 0 auto"></div>
     </div>

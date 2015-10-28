@@ -177,8 +177,10 @@
   <ItemGroup>
     <Compile Include="Api\Controllers\BaseController.cs" />
     <Compile Include="Api\Controllers\ClusteringController.cs" />
+    <Compile Include="Api\Controllers\DiseaseController.cs" />
     <Compile Include="Api\Controllers\SeedController.cs" />
     <Compile Include="Api\Models\ClusterApiModel.cs" />
+    <Compile Include="Api\Models\ClusterDataApiModel.cs" />
     <Compile Include="Api\Models\PropertyRange.cs" />
     <Compile Include="Api\Shared\Algorithms\KMeans\KMAlgorithm.cs" />
     <Compile Include="Api\Shared\Algorithms\KMeans\KMDataPoint.cs" />

@@ -8,9 +8,15 @@
         }
 
         exports.clusteredData = ko.observable();
+        exports.diseaseProperties = ko.observable();
+        exports.clusterPropertyIds = ko.observableArray();
 
         exports.showGraph = function() {
-            guajax.get("api/clustering/test")
+            guajax.post("api/clustering/test", {
+                clusterDiseaseId: diseaseId,
+                clusterPropertyIds: exports.clusterPropertyIds()
+
+            })
             .then(function(response) {
                 exports.clusteredData(response.data);
 
@@ -41,6 +47,17 @@
             });
             
             exports.delegate.showValidity(columnData);
+        };
+
+        exports.init = function() {
+            var _fetchDiseaseProperties = function() {
+                guajax.get("api/diseases/" + diseaseId + "/properties")
+                .then(function(response) {
+                    exports.diseaseProperties(response.data);
+                });
+            };
+
+            _fetchDiseaseProperties();
         };
     };
 });
