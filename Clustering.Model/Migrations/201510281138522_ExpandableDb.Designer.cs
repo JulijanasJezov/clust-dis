@@ -7,13 +7,13 @@ namespace Clustering.Model.Seed
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class TempDepression : IMigrationMetadata
+    public sealed partial class ExpandableDb : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(TempDepression));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ExpandableDb));
         
         string IMigrationMetadata.Id
         {
-            get { return "201510071310285_TempDepression"; }
+            get { return "201510281138522_ExpandableDb"; }
         }
         
         string IMigrationMetadata.Source

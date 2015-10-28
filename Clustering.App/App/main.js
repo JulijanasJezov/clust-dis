@@ -15,7 +15,7 @@ define(['durandal/system', 'durandal/app'], function(system, app) {
     system.debug(true);
 
     app.title = "Clustering";
-
+    system.debug(true);
     app.configurePlugins({
         router: true,
         dialog: true

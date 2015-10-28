@@ -6,14 +6,23 @@ using System.Web.Http;
 
 namespace Clustering.App.Api.Controllers
 {
+
     [RoutePrefix("api/clustering")]
     public class ClusteringController : BaseController
     {
+        [Route("diseases")]
+        public IHttpActionResult GetDiseases()
+        {
+            var diseases = Db.Diseases.ToList();
+
+            return ApiOk(diseases);
+        }
+
         [Route("test")]
         public IHttpActionResult GetAgeDepressionClusters(bool calculateSilhouette = true)
         {
             var people = Db.People
-                .Where(s => s.DepressionLevel.HasValue)
+                .Where(s => s.PersonDiseaseProperties.Where(a => a.DiseasePropertyId == 1).Any())
                 .ToList();
 
             var dataPoints = new List<KMDataPoint>();
@@ -25,9 +34,13 @@ namespace Clustering.App.Api.Controllers
 
                 var properties = new Dictionary<string, double>()
                 {
-                    {"x", age },
-                    {"y", (double)person.DepressionLevel }
+                    {"age", age }
                 };
+
+                foreach (var property in person.PersonDiseaseProperties)
+                {
+                    properties.Add(property.DiseaseProperty.Name, property.Score);
+                }
 
                 dataPoints.Add(new KMDataPoint(properties, person.FirstName, person.LastName));
             }
@@ -41,7 +54,8 @@ namespace Clustering.App.Api.Controllers
                 .Select(s => new ClusterApiModel
                 {
                     Name = "Cluster " + s.Key,
-                    DataPoints = s.ToList()
+                    DataPoints = s.ToList(),
+                    Total = s.Count()
                 })
                 .ToList();
 

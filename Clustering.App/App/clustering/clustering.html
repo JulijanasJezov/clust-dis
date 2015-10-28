@@ -1,0 +1,15 @@
+﻿<div class="containe-fluid" >
+    <div style="margin-bottom: 10px;">
+        <ul class="nav nav-tabs">
+            <!-- ko foreach: diseaseTabs -->
+            <li data-bind="css: { 'active': $root.selectedDiseaseTabId() ==  diseaseId}">
+                <a data-bind="href: '#'">
+                    <span><!-- ko text: name --><!--/ko--></span>
+                </a>
+            </li>
+            <!-- /ko -->
+        </ul>
+    </div>
+
+    <div data-bind="router: { cacheViews: false }"></div>
+</div>

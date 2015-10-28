@@ -11,10 +11,16 @@ namespace Clustering.App.Api.Controllers
         [Route("")]
         public IHttpActionResult GetSeedDemoData()
         {
-            if (Db.People.Any()) return ApiBadRequest("Database is not empty");
+            //if (Db.People.Any()) return ApiBadRequest("Database is not empty");
 
+            //Task.WaitAll(
+            //    SeedTasks.SeedPeople());
+            //Task.WaitAll(
+            //    SeedTasks.SeedDiseases());
             Task.WaitAll(
-                SeedTasks.SeedPeople());
+                SeedTasks.SeedDiseaseProperties());
+            Task.WaitAll(
+                SeedTasks.SeedPersonDiseaseProperties());
 
             return ApiOk("Demo data has been seeded");
         }

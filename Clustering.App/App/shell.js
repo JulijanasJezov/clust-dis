@@ -4,7 +4,7 @@
         router: router,
         activate: function() {
             router.map([
-              { route: "", title: "Home", moduleId: "test/test", nav: true }
+              { route: ["", "disease/:id"], title: "Clustering", moduleId: "clustering/clustering", nav: true }
             ]).buildNavigationModel();
 
             return router.activate();

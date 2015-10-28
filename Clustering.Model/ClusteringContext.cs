@@ -11,6 +11,9 @@ namespace Clustering.Model
     public class ClusteringContext : DbContext
     {
         public DbSet<Person> People { get; set; }
+        public DbSet<Disease> Diseases { get; set; }
+        public DbSet<DiseaseProperty> DiseaseProperties { get; set; }
+        public DbSet<PersonDiseasePropertyAssociation> PersonDiseasePropertyAssociations { get; set; }
 
         public ClusteringContext()
             : base("Clustering")

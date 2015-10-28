@@ -1,4 +1,5 @@
 ﻿using Clustering.Model;
+using System.Collections.Generic;
 using System;
 
 namespace Clustering.Model
@@ -11,6 +12,7 @@ namespace Clustering.Model
         public string LastName { get; set; }
         public GenderType Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public int? DepressionLevel { get; set; } // Temporary example
+
+        public virtual ICollection<PersonDiseasePropertyAssociation> PersonDiseaseProperties { get; set; }
     }
 }

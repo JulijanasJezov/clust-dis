@@ -48,16 +48,13 @@ namespace Clustering.Model.Seed.Tasks
 
                         var dateOfBirth = Helper.GenerateDateOfBirth();
 
-                        var depressionLevel = ThreadSafeRandom.Next(0, 50); // Temp ex
-
                         var person = new Person
                         {
                             Title = title,
                             FirstName = firstName,
                             LastName = lastName,
                             Gender = isMale ? GenderType.Male : GenderType.Female,
-                            DateOfBirth = dateOfBirth,
-                            DepressionLevel = depressionLevel
+                            DateOfBirth = dateOfBirth
                         };
 
                         context.People.Add(person);
