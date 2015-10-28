@@ -106,7 +106,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App\shared\columnDataModel.js" />
     <Content Include="App\shared\scatterSeriesModel.js" />
     <Content Include="App\shared\guajax.js" />
     <Content Include="App\main.js" />
@@ -177,6 +176,8 @@
     <Compile Include="Api\Controllers\BaseController.cs" />
     <Compile Include="Api\Controllers\ClusteringController.cs" />
     <Compile Include="Api\Controllers\SeedController.cs" />
+    <Compile Include="Api\Models\ClusterApiModel.cs" />
+    <Compile Include="Api\Models\PropertyRange.cs" />
     <Compile Include="Api\Shared\Algorithms\KMeans\KMAlgorithm.cs" />
     <Compile Include="Api\Shared\Algorithms\KMeans\KMDataPoint.cs" />
     <Compile Include="Api\Shared\Algorithms\Shared\Helpers.cs" />
@@ -203,9 +204,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Api\Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Clustering.Model\Clustering.Model.csproj">
       <Project>{a4ce9c70-b129-433d-ad21-bcc407d0a1b3}</Project>

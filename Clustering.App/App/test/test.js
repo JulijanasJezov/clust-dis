@@ -1,14 +1,14 @@
 ﻿define(["test/testModel"], function(testModel) {
-    var model = ko.observable(new testModel());
+    var model = ko.observable();
 
     var activate = function() {
+        model(new testModel());
 
         model().delegate.showGraph = function(data) {
-            new Highcharts.Chart({
+            $('#chart').highcharts({
                 chart: {
                     type: 'scatter',
-                    zoomType: 'xy',
-                    renderTo: "chart"
+                    zoomType: 'xy'
                 },
                 title: {
                     text: "Test"
@@ -66,49 +66,48 @@
                 },
                 series: data
             });
-        }
-    };
+        };
 
-    model().delegate.showValidity = function(data) {
-        new Highcharts.Chart({
-            chart: {
-                type: 'column',
-                renderTo: "validityChart"
-            },
-            title: {
-                text: 'Silhouette'
-            },
-            xAxis: {
-                type: 'category',
-                labels: {
-                    rotation: -45,
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
-                }
-            },
-            yAxis: {
-                min: 0,
+        model().delegate.showValidity = function(data) {
+            $('#validityChart').highcharts({
+                chart: {
+                    type: 'column'
+                },
                 title: {
                     text: 'Silhouette'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            tooltip: {
-                pointFormat: 'Silhouette: <b>{point.y:.1f}</b>'
-            },
-            series: [{
-                name: 'Silhouette',
-                data: data
-            }]
-        });
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -45,
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Silhouette'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                tooltip: {
+                    pointFormat: 'Silhouette: <b>{point.y:.1f}</b>'
+                },
+                series: [{
+                    name: 'Silhouette',
+                    data: data
+                }]
+            });
+        };
     };
 
     return {
-        activate: activate,
-        model: model
+        model: model,
+        activate: activate
     };
 });

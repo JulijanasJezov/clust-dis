@@ -1,13 +1,15 @@
 ﻿requirejs.config({
     paths: {
+        "Scripts": "../Scripts",
         'text': '../Scripts/text',
         'durandal': '../Scripts/durandal',
-        'plugins': '../Scripts/durandal/plugins',
-        'knockout': '../Scripts/knockout-3.1.0',
-        'jquery': '../Scripts/jquery-1.9.1'
+        'plugins': '../Scripts/durandal/plugins'
         
     }
 });
+
+define("knockout", ko);
+define("jquery", [], function() { return jQuery; });
 
 define(['durandal/system', 'durandal/app'], function(system, app) {
     system.debug(true);

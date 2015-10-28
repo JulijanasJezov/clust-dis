@@ -38,13 +38,41 @@ namespace Clustering.App.Api.Controllers
 
             var clusteredData = clusterGroupAssignedData
                 .GroupBy(s => s.Cluster)
-                .Select(s => new
+                .Select(s => new ClusterApiModel
                 {
                     Name = "Cluster " + s.Key,
-                    DataPoints = s
-                });
+                    DataPoints = s.ToList()
+                })
+                .ToList();
+
+            clusteredData = CalculatePropertiesRange(clusteredData);
 
             return ApiOk(clusteredData);
+        }
+
+        private List<ClusterApiModel> CalculatePropertiesRange(List<ClusterApiModel> clusters)
+        {
+            foreach (var cluster in clusters)
+            {
+                cluster.PropertiesRange = new List<PropertyRange>();
+
+                foreach(var property in cluster.DataPoints.First().Properties)
+                {
+                    var name = property.Key;
+                    var min = cluster.DataPoints.Min(s => s.Properties[property.Key]);
+                    var max = cluster.DataPoints.Max(s => s.Properties[property.Key]);
+
+                    var propertyRange = new PropertyRange
+                    {
+                        Name = name,
+                        MinValue = min,
+                        MaxValue = max
+                    };
+
+                    cluster.PropertiesRange.Add(propertyRange);
+                }
+            }
+            return clusters;
         }
     }
 }
