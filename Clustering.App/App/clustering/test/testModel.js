@@ -13,6 +13,9 @@
         exports.clusterPropertyIds = ko.observableArray();
         exports.includeAge = ko.observable();
         exports.calculateSilhouette = ko.observable();
+        exports.searchValue = ko.observable();
+        exports.searchResults = ko.observableArray();
+        exports.personSelected = ko.observable();
 
         exports.showGraph = function() {
             guajax.post("api/cluster", {
@@ -52,6 +55,18 @@
             });
             
             exports.delegate.showValidity(columnData);
+        };
+
+        exports.search = function() {
+            var results = [];
+            _.each(exports.clusteredData(), function(cluster) {
+                results.push(_.filter(cluster.dataPoints, function(person) {
+                    return person.firstName == exports.searchValue() || person.lastName == exports.searchValue()
+                        || person.firstName + ' ' + person.lastName == exports.searchValue();
+                }));
+            });
+            results = _.flatten(results);
+            exports.searchResults(results);
         };
 
         exports.init = function() {
