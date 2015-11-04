@@ -41,7 +41,7 @@
                                     <input class="form-control" placeholder="Search" data-bind="value: searchValue">
                                 </div>
                                 <button class="btn btn-default" data-bind="click: search">Find</button>
-                                <button class="btn btn-danger" data-bind="click: function() { searchResults(null);}">Reset</button>
+                                <button class="btn btn-danger" data-bind="click: function() { searchResults(null); searchValue(null);}">Reset</button>
                             </form>
 
                             <div class="list-group" data-bind="foreach: searchResults()" style="margin-top:10px;">
