@@ -1,43 +1,50 @@
 ﻿<div data-bind="with: model()" class="container-fluid">
     <div class="row">
-        <div class="col-md-3">
-            <table class="table">
-                <tr>
-                    <th>Property</th>
-                    <th>Include</th>
-                </tr>
-                <!-- ko foreach: diseaseProperties() -->
-                <tr>
-                    <td data-bind="text: name"></td>
-                    <td><input type="checkbox" data-bind="value: diseasePropertyId, checked: $parent.clusterPropertyIds" /></td>
-                </tr>
-                <!-- /ko -->
-            </table>
-        </div>
-    </div>
+        <fieldset>
+            <legend>Clustering</legend>
 
-    <div class="row">
-        <button class="btn btn-default" data-bind="enable: clusterPropertyIds().length > 1, click: showGraph">Show Graph</button>
-        <button class="btn btn-default" data-bind="visible: clusteredData(), click: showValidity">Show Validity</button>
-    </div>
-
-    <div class="row">
-        <div class="col-md-2">
-            <!-- ko if: clusteredData() -->
-            <div data-bind="foreach: clusteredData">
-                <br />
-                <b data-bind="text: name"></b>
-                <span data-bind="text: 'Total Members ' + total"></span>
-                <div data-bind="foreach: propertiesRange">
-                    <span data-bind="text: name + ' ' + minValue + ' - ' + maxValue"></span> <br />
+            <div class="col-md-2">
+                <table class="table">
+                    <tr>
+                        <th>Property</th>
+                        <th>Include</th>
+                    </tr>
+                    <tr>
+                        <td>Age</td>
+                        <td><input type="checkbox" data-bind="checked: includeAge" /></td>
+                    </tr>
+                    <!-- ko foreach: diseaseProperties() -->
+                    <tr>
+                        <td data-bind="text: name"></td>
+                        <td><input type="checkbox" data-bind="value: diseasePropertyId, checked: $parent.clusterPropertyIds" /></td>
+                    </tr>
+                    <!-- /ko -->
+                </table>
+                <input type="checkbox" data-bind="checked: calculateSilhouette"> Calculate Clusters Validity
+                <div>
+                    <button class="btn btn-default" data-bind="enable: clusterPropertyIds().length > 1 || (clusterPropertyIds().length > 0 && includeAge()), click: showGraph">Cluster Data</button>
+                    <button class="btn btn-default" data-bind="visible: clusteredData() && calculateSilhouette(), click: showValidity">Show Validity</button>
                 </div>
             </div>
-            <!-- /ko -->
 
-        </div>
-        <div class="col-md-8">
-            <div id="chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-        </div>
+            <div class="col-md-8">
+                <div id="chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+
+            <div class="col-md-2">
+                <!-- ko if: clusteredData() -->
+                <div data-bind="foreach: clusteredData">
+                    <br />
+                    <b data-bind="text: name"></b>
+                    <span data-bind="text: 'Total Members ' + total"></span>
+                    <div data-bind="foreach: propertiesDetails">
+                        <span data-bind="text: name + ' ' + minValue + '-' + maxValue + ' ~' + averageValue"></span> <br />
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+
+        </fieldset>
     </div>
 
     <div class="row">

@@ -11,10 +11,7 @@
                     zoomType: 'xy'
                 },
                 title: {
-                    text: "Test"
-                },
-                subtitle: {
-                    text: "Subtitle"
+                    text: model().diseaseName()
                 },
                 xAxis: {
                     title: {

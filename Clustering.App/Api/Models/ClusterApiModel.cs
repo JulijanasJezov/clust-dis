@@ -10,7 +10,7 @@ namespace Clustering.App.Api
     {
         public string Name { get; set; }
         public List<KMDataPoint> DataPoints { get; set; }
-        public List<PropertyRange> PropertiesRange { get; set; }
+        public List<PropertyDetails> PropertiesDetails { get; set; }
         public int Total { get; set; }
     }
 }

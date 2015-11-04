@@ -7,49 +7,61 @@ using System.Web.Http;
 
 namespace Clustering.App.Api.Controllers
 {
-    [RoutePrefix("api/clustering")]
+    [RoutePrefix("api/cluster")]
     public class ClusteringController : BaseController
     {
-        [Route("test")]
-        public IHttpActionResult PostClusterData(ClusterDataApiModel clusterData, bool calculateSilhouette = true)
+        [Route("")]
+        public IHttpActionResult PostClusterData(ClusterDataApiModel clusterData)
         {
-            //TODO
-            var people = Db.People.Where(s => s.PersonDiseaseProperties
-                .Where(a => a.DiseaseProperty.DiseaseId == clusterData.ClusterDiseaseId).Any())
+            var people = Db.People
+                .Where(s => s.PersonDiseaseProperties
+                            .Where(a => a.DiseaseProperty.DiseaseId == clusterData.ClusterDiseaseId)
+                            .Any())
                 .ToList();
 
             var clusterProperties = Db.DiseaseProperties
                 .Where(s => clusterData.ClusterPropertyIds.Contains(s.DiseasePropertyId));
 
+            var clusterPropertiesCount = clusterData.IncludeAge ? clusterProperties.Count() + 1 : clusterProperties.Count();
+
             var dataPoints = new List<KMDataPoint>();
 
             foreach (var person in people)
             {
-                var age = DateTime.Now.Year - person.DateOfBirth.Year;
-                if (DateTime.Now.Month < person.DateOfBirth.Month || (DateTime.Now.Month == person.DateOfBirth.Month && DateTime.Now.Day < person.DateOfBirth.Day)) age--;
+                var properties = new Dictionary<string, double>();
 
-                var properties = new Dictionary<string, double>()
+                if (clusterData.IncludeAge)
                 {
-                    {"age", age }
-                };
+                    var age = DateTime.Now.Year - person.DateOfBirth.Year;
+                    if (DateTime.Now.Month < person.DateOfBirth.Month || (DateTime.Now.Month == person.DateOfBirth.Month && DateTime.Now.Day < person.DateOfBirth.Day)) age--;
+
+                    properties.Add("Age", age);
+                }
 
                 foreach (var property in clusterProperties)
                 {
-                    var score = person.PersonDiseaseProperties
+                    int? score = person.PersonDiseaseProperties
                         .Where(s => s.DiseasePropertyId == property.DiseasePropertyId)
                         .Select(s => s.Score)
                         .SingleOrDefault();
 
-                    // or discard?
-                    properties.Add(property.Name, score);
+                    if (score != null)
+                    {
+                        properties.Add(property.Name, score.Value);
+                    }
                 }
 
-                dataPoints.Add(new KMDataPoint(properties, person.FirstName, person.LastName));
+                // Ignore people with null properties
+                if (properties.Count() == clusterPropertiesCount)
+                {
+                    dataPoints.Add(new KMDataPoint(properties, person.FirstName, person.LastName));
+                }
+
             }
 
             var km = new KMAlgorithm();
 
-            var clusterGroupAssignedData = km.ClusterData(dataPoints, calculateSilhouette);
+            var clusterGroupAssignedData = km.ClusterData(dataPoints, clusterData.CalculateSilhouette);
 
             var clusteredData = clusterGroupAssignedData
                 .GroupBy(s => s.Cluster)
@@ -70,22 +82,24 @@ namespace Clustering.App.Api.Controllers
         {
             foreach (var cluster in clusters)
             {
-                cluster.PropertiesRange = new List<PropertyRange>();
+                cluster.PropertiesDetails = new List<PropertyDetails>();
 
                 foreach(var property in cluster.DataPoints.First().Properties)
                 {
                     var name = property.Key;
                     var min = cluster.DataPoints.Min(s => s.Properties[property.Key]);
                     var max = cluster.DataPoints.Max(s => s.Properties[property.Key]);
+                    var avg = cluster.DataPoints.Sum(s => s.Properties[property.Key]) / cluster.DataPoints.Count();
 
-                    var propertyRange = new PropertyRange
+                    var propertyRange = new PropertyDetails
                     {
                         Name = name,
                         MinValue = min,
-                        MaxValue = max
+                        MaxValue = max,
+                        AverageValue = Math.Ceiling(avg * 100) / 100    // Round up to .00
                     };
 
-                    cluster.PropertiesRange.Add(propertyRange);
+                    cluster.PropertiesDetails.Add(propertyRange);
                 }
             }
             return clusters;
