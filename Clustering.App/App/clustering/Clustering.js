@@ -12,14 +12,13 @@
     .map([
         {
             route: ["", ":id"],
-            moduleId: "test/test",
-            title: "Test",
+            moduleId: "cluster/cluster",
+            title: "Cluster Data",
             tab: "cluster"
         }
     ]);
 
     childRouter.mapUnknownRoutes(function(instruction) {
-
     });
 
     childRouter.on("router:route:activating", function(instance, instruction) {
@@ -39,8 +38,7 @@
 
             if (!selectedDiseaseTabId()) {
                 var defaultTab = _.first(diseaseTabs()).diseaseId;
-
-                router.navigate("disease/" + defaultTab);
+                router.navigate("cluster/diseases/" + defaultTab);
             }
         });
     };

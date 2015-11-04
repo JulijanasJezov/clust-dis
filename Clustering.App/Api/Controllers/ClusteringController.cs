@@ -1,4 +1,4 @@
-﻿using Clustering.App.Api.Shared.Algorithms;
+﻿using Clustering.App.Api.Algorithms;
 using Clustering.Model;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace Clustering.App.Api.Controllers
     public class ClusteringController : BaseController
     {
         [Route("")]
-        public IHttpActionResult PostClusterData(ClusterDataApiModel clusterData)
+        public IHttpActionResult PostClusterData(PostClusterApiModel clusterData)
         {
             var people = Db.People
                 .Where(s => s.PersonDiseaseProperties
@@ -65,7 +65,7 @@ namespace Clustering.App.Api.Controllers
 
             var clusteredData = clusterGroupAssignedData
                 .GroupBy(s => s.Cluster)
-                .Select(s => new ClusterApiModel
+                .Select(s => new ClusteredDataApiModel
                 {
                     Name = "Cluster " + s.Key,
                     DataPoints = s.ToList(),
@@ -78,7 +78,7 @@ namespace Clustering.App.Api.Controllers
             return ApiOk(clusteredData);
         }
 
-        private List<ClusterApiModel> CalculatePropertiesRange(List<ClusterApiModel> clusters)
+        private List<ClusteredDataApiModel> CalculatePropertiesRange(List<ClusteredDataApiModel> clusters)
         {
             foreach (var cluster in clusters)
             {

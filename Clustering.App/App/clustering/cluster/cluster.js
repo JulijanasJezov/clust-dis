@@ -1,8 +1,8 @@
-﻿define(["clustering/test/testModel"], function(testModel) {
+﻿define(["clustering/cluster/clusterModel"], function(clusterModel) {
     var model = ko.observable();
 
     var activate = function(diseaseId) {
-        model(new testModel(diseaseId));
+        model(new clusterModel(diseaseId));
 
         model().delegate.showGraph = function(data) {
             $('#chart').highcharts({

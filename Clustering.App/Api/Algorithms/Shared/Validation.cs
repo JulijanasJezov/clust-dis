@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Clustering.App.Api.Shared.Algorithms
+namespace Clustering.App.Api.Algorithms
 {
     public static class Validation
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Clustering.App.Api.Shared.Algorithms
+namespace Clustering.App.Api.Algorithms
 {
     public class KMAlgorithm
     {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Clustering.App.Api.Shared.Algorithms;
+using Clustering.App.Api.Algorithms;
 
 namespace Clustering.App.Api
 {
-    public class ClusterApiModel
+    public class ClusteredDataApiModel
     {
         public string Name { get; set; }
         public List<KMDataPoint> DataPoints { get; set; }

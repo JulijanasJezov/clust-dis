@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Clustering.App.Api.Shared.Algorithms
+namespace Clustering.App.Api.Algorithms
 {
     public class KMDataPoint
     {

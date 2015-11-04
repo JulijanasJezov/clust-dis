@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Clustering.App.Api
 {
-    public class ClusterDataApiModel
+    public class PostClusterApiModel
     {
         public int ClusterDiseaseId { get; set; }
         public int[] ClusterPropertyIds { get; set; }
