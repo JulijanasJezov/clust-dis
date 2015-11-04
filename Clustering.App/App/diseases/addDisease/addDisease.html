@@ -1,0 +1,34 @@
+﻿<div data-bind="with: model()" class="container-fluid">
+
+    <div class="row">
+        <fieldset>
+            <legend>Add Disease</legend>
+
+            <div class="col-md-4">
+                <form>
+                    <div class="form-group" data-bind="css: { 'has-error': nameRequiredError() }">
+                        <label>Name</label>
+                        <input class="form-control" data-bind="value: diseaseName">
+                        <span class="help-block " data-bind="visible: nameRequiredError()">Name is required</span>
+                    </div>
+                    <label>Properties</label>
+                    <div class="form-group">
+                        <!-- ko foreach: properties -->
+                        <span data-bind="text: name"></span> <a href="javascript:void(0)" data-bind="click: function() { $parent.removeProperty($data); }"><i class="fa fa-minus"></i></a><br />
+                        <!-- /ko-->
+                    </div>
+                    <div class="form-group" data-bind="css: { 'has-error': propertyExists() || propertiesRequiredError() }">
+                        <label>Property Name</label>
+                        <input class="form-control" data-bind="value: propertyName">
+                        <span class="help-block " data-bind="visible: propertyExists()">Property is already in the list</span>
+                        <span class="help-block " data-bind="visible: propertiesRequiredError()">At least 2 Properties are required</span>
+                        <a href="javascript:void(0)" data-bind="click: addProperty" class="pull-right"><i class="fa fa-plus fa-2x"></i></a>
+                    </div>
+                    <button class="btn btn-primary" data-bind="click: addDisease">Add Disease</button>
+                    <button class="btn btn-default">Cancel</button>
+                </form>
+            </div>
+        </fieldset>
+    </div>
+
+</div>

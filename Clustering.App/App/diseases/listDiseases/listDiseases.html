@@ -1,0 +1,29 @@
+﻿<div data-bind="with: model()" class="container-fluid">
+
+    <div>
+        <a class="btn btn-default" href="#diseases/add">Add Disease</a>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+
+                <!-- ko foreach: diseases() -->
+                <tr>
+                    <td>
+                        <b><a data-bind="attr: { href: '#diseases/' + diseaseId }, text: name"></a></b>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" data-bind="click: function() { $parent.deleteDisease(diseaseId); }, visible: canDelete">Delete</button>
+                    </td>
+                </tr>
+                <!-- /ko -->
+            </table>
+        </div>
+    </div>
+    
+</div>

@@ -108,6 +108,12 @@
   <ItemGroup>
     <Content Include="App\clustering\clustering.html" />
     <Content Include="App\clustering\clustering.js" />
+    <Content Include="App\diseases\addDisease\addDisease.html" />
+    <Content Include="App\diseases\addDisease\addDisease.js" />
+    <Content Include="App\diseases\addDisease\addDiseaseModel.js" />
+    <Content Include="App\diseases\listDiseases\listDiseases.html" />
+    <Content Include="App\diseases\listDiseases\listDiseases.js" />
+    <Content Include="App\diseases\listDiseases\listDiseasesModel.js" />
     <Content Include="App\shared\scatterSeriesModel.js" />
     <Content Include="App\shared\guajax.js" />
     <Content Include="App\main.js" />
@@ -179,8 +185,9 @@
     <Compile Include="Api\Controllers\ClusteringController.cs" />
     <Compile Include="Api\Controllers\DiseaseController.cs" />
     <Compile Include="Api\Controllers\SeedController.cs" />
-    <Compile Include="Api\Models\ClusteredDataApiModel.cs" />
-    <Compile Include="Api\Models\PostClusterApiModel.cs" />
+    <Compile Include="Api\Models\Clustering\ClusteredDataApiModel.cs" />
+    <Compile Include="Api\Models\Diseases\PostDiseaseApiModel.cs" />
+    <Compile Include="Api\Models\Clustering\PostClusterApiModel.cs" />
     <Compile Include="Api\Models\PropertyRange.cs" />
     <Compile Include="Api\Algorithms\KMeans\KMAlgorithm.cs" />
     <Compile Include="Api\Algorithms\KMeans\KMDataPoint.cs" />
