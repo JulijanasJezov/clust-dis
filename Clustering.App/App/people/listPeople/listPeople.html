@@ -1,0 +1,42 @@
+﻿<div data-bind="with: model()" class="container-fluid">
+
+    <div class="alert alert-success" data-bind="visible: $root.message(), text: $root.message()"></div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <a class="btn btn-default" href="#people/add">Add Person</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <input style="margin-top:20px; margin-bottom:20px;" type="text" class="form-control form-control-search" data-bind="textInput: pager.filterQuery" placeholder="Filter People" maxlength="20">
+        </div>
+        <div class="col-md-2 pull-right">
+            <div class="btn-group pull-right" data-bind="compose: { view: 'shared/pager', model: pager }"></div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Date of Birth</th>
+                    <th>Gender</th>
+                </tr>
+
+                <!-- ko foreach: people() -->
+                <tr>
+                    <td>
+                        <b><a data-bind="attr: { href: '#people/' + personId + '/edit' }, text: title + ' ' + firstName + ' ' + lastName"></a></b>
+                    </td>
+                    <td data-bind="text: moment(dateOfBirth).format('DD/MM/YYYY')"></td>
+                    <td data-bind="text: gender"></td>
+                </tr>
+                <!-- /ko -->
+            </table>
+        </div>
+    </div>
+
+</div>

@@ -17,6 +17,7 @@ namespace Clustering.App.Api.Controllers
                 {
                     DiseaseId = s.DiseaseId,
                     Name = s.Name,
+                    DiseaseProperties = Db.DiseaseProperties.Where(j => j.DiseaseId == s.DiseaseId),
                     CanDelete = !Db.People.Where(a => a.PersonDiseaseProperties.Where(b => b.DiseaseProperty.DiseaseId == s.DiseaseId).Any()).Any()
                 })
                 .ToList();

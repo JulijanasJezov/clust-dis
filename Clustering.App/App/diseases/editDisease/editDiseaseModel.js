@@ -1,5 +1,5 @@
 ﻿define(["shared/guajax"], function(guajax) {
-    return function testModel(diseaseId) {
+    return function editDiseaseModel(diseaseId) {
         var exports = this;
 
         exports.delegate = {

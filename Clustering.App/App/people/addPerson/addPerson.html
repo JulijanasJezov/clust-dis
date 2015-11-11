@@ -1,0 +1,59 @@
+﻿<div data-bind="with: model()" class="container-fluid">
+
+    <div class="row">
+        <fieldset>
+            <legend>Add Person</legend>
+
+            <div class="col-md-4">
+                <form>
+                    <div class="form-group"">
+                        <label>Title</label>
+                        <input class="form-control" data-bind="value: title">
+                    </div>
+                    <div class="form-group" data-bind="css: { 'has-error': firstNameRequiredError() }">
+                        <label>First Name</label>
+                        <input class="form-control" data-bind="value: firstName">
+                        <span class="help-block " data-bind="visible: firstNameRequiredError()">First Name is required</span>
+                    </div>
+                    <div class="form-group" data-bind="css: { 'has-error': lastNameRequiredError() }">
+                        <label>Last Name</label>
+                        <input class="form-control" data-bind="value: lastName">
+                        <span class="help-block " data-bind="visible: lastNameRequiredError()">Last Name is required</span>
+                    </div>
+                    <div class="form-group" data-bind="css: { 'has-error': dobRequiredError() }">
+                        <label>Date of Birth</label>
+                        <input class="form-control" data-bind="value: dateOfBirth" placeholder="DD/MM/YYYY">
+                        <span class="help-block " data-bind="visible: dobRequiredError()">Date of Birth is required</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select class="form-control" data-bind="options: genders, value: selectedGender, optionsCaption: 'Select Gender'"></select>
+                    </div>
+                    <div class="form-group" data-bind="css: { 'has-error': diseaseAddedError() }">
+                        <label>Disease</label>
+                        <select class="form-control" data-bind="options: diseases, optionsValue: 'diseaseId', optionsText: 'name', value: selectedDiseaseId, optionsCaption: 'Select Disease'"></select>
+                        <span class="help-block " data-bind="visible: diseaseAddedError()">Disease is already in the list</span>
+                     </div>
+                    <div class="form-group" data-bind="with: selectedDisease()">
+                        <!-- ko foreach: diseaseProperties -->
+                        <label data-bind="text: name"></label>
+                        <input class="form-control" data-bind="value: score">
+                        <!-- /ko -->
+                        <a href="javascript:void(0)" data-bind="click: $parent.addDisease" class="pull-right"><i class="fa fa-plus fa-2x"></i></a>
+                    </div>
+                    <!-- ko if: _.any(diseasesAdded()) -->
+                    <div class="form-group">
+                        <label>Diseases Added</label>
+                        <!-- ko foreach: diseasesAdded() -->
+                        <br /><span data-bind="text: name"></span> <a href="javascript:void(0)" data-bind="click: function() { $parent.removeDisease(diseaseId); }"><i class="fa fa-minus"></i></a><br />
+                        <!-- /ko -->
+                     </div>
+                    <!-- /ko -->
+                    <button class="btn btn-primary" data-bind="click: addPerson">Add Person</button>
+                    <a href="#people" class="btn btn-default">Cancel</a>
+                </form>
+            </div>
+        </fieldset>
+    </div>
+
+</div>

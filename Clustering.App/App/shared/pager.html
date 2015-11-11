@@ -1,0 +1,13 @@
+﻿<ul class="pagination">
+    <li data-bind="css: { 'disabled': !hasPreviousPage() }">
+        <a href="javascript:void(0)" data-bind="click: function() { requestPreviousPage(); }"><span class="fa fa-caret-left"></span></a>
+    </li>
+    <li>
+        <span class="pagination-detail">
+            <!-- ko text: pagingFromNumber--><!--/ko-->-<!-- ko text: pagingToNumber--><!--/ko--> of <!-- ko text: totalResults--><!--/ko-->
+        </span>
+    </li>
+    <li data-bind="css: { 'disabled': !hasNextPage() }">
+        <a href="javascript:void(0)" data-bind="click: function() { requestNextPage(); }"><span class="fa fa-caret-right"></span></a>
+    </li>
+</ul>

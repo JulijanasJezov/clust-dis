@@ -1,5 +1,5 @@
-﻿define(["shared/guajax"], function(guajax, scatterSeriesModel) {
-    return function testModel(diseaseId) {
+﻿define(["shared/guajax"], function(guajax) {
+    return function listDiseasesModel(diseaseId) {
         var exports = this;
 
         exports.delegate = {
