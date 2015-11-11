@@ -1,8 +1,8 @@
 ﻿<div data-bind="with: model()" class="container-fluid">
 
-    <div>
-        <a class="btn btn-default" href="#diseases/add">Add Disease</a>
-    </div>
+    <div class="alert alert-success" data-bind="visible: $root.message(), text: $root.message()"></div>
+
+    <a class="btn btn-default" href="#diseases/add">Add Disease</a>
 
     <div class="row" style="margin-top:10px;">
         <div class="col-md-12">
@@ -15,7 +15,7 @@
                 <!-- ko foreach: diseases() -->
                 <tr>
                     <td>
-                        <b><a data-bind="attr: { href: '#diseases/' + diseaseId }, text: name"></a></b>
+                        <b><a data-bind="attr: { href: '#diseases/' + diseaseId + '/edit' }, text: name"></a></b>
                     </td>
                     <td>
                         <button class="btn btn-danger btn-sm" data-bind="click: function() { $parent.deleteDisease(diseaseId); }, visible: canDelete">Delete</button>
@@ -25,5 +25,5 @@
             </table>
         </div>
     </div>
-    
+
 </div>

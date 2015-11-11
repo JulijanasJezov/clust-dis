@@ -2,7 +2,7 @@
 
     <div class="row">
         <fieldset>
-            <legend>Add Disease</legend>
+            <legend>Edit Disease</legend>
 
             <div class="col-md-4">
                 <form>
@@ -14,7 +14,7 @@
                     <label>Properties</label>
                     <div class="form-group">
                         <!-- ko foreach: properties -->
-                        <span data-bind="text: name"></span> <a href="javascript:void(0)" data-bind="click: function() { $parent.removeProperty($data); }"><i class="fa fa-minus"></i></a><br />
+                        <span data-bind="text: name"></span> <a href="javascript:void(0)" data-bind="visible: canDelete, click: function() { $parent.removeProperty($data); }"><i class="fa fa-minus"></i></a><br />
                         <!-- /ko-->
                     </div>
                     <div class="form-group" data-bind="css: { 'has-error': propertyExists() || propertiesRequiredError() }">
@@ -24,7 +24,7 @@
                         <span class="help-block " data-bind="visible: propertiesRequiredError()">At least 2 Properties are required</span>
                         <a href="javascript:void(0)" data-bind="click: addProperty" class="pull-right"><i class="fa fa-plus fa-2x"></i></a>
                     </div>
-                    <button class="btn btn-primary" data-bind="click: addDisease">Add Disease</button>
+                    <button class="btn btn-primary" data-bind="click: updateDisease">Update Disease</button>
                     <a href="#diseases" class="btn btn-default">Cancel</a>
                 </form>
             </div>

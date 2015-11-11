@@ -7,6 +7,7 @@ namespace Clustering.App.Api
 {
     public class PropertyDetails
     {
+        public int? DiseasePropertyId { get; set; }
         public string Name { get; set; }
         public double MinValue { get; set; }
         public double MaxValue { get; set; }

@@ -3,7 +3,7 @@
         var exports = this;
 
         exports.delegate = {
-            addedSuccessfully: function() { }
+            updateSuccessful: function() { }
         };
 
         exports.diseaseName = ko.observable();
@@ -23,8 +23,7 @@
                 return existingProperty.name === property.name;
             }));
 
-            if (!exports.propertyExists())
-            {
+            if (!exports.propertyExists()) {
                 exports.properties.push(property);
             }
         };
@@ -33,18 +32,18 @@
             exports.properties.remove(item);
         };
 
-        exports.addDisease = function() {
+        exports.updateDisease = function() {
             var isValid = validateDisease();
 
             if (!isValid) return;
 
-            guajax.post("api/diseases", {
+            guajax.patch("api/diseases/" + diseaseId, {
                 diseaseName: exports.diseaseName(),
                 properties: exports.properties()
 
             })
             .then(function(response) {
-                exports.delegate.addedSuccessfully();
+                exports.delegate.updateSuccessful();
             });
         };
 
@@ -57,5 +56,17 @@
 
             return !exports.nameRequiredError() && !exports.propertiesRequiredError();
         }
+
+        var _fetchDisease = function() {
+            guajax.get("api/diseases/" + diseaseId)
+           .then(function(response) {
+               exports.diseaseName(response.data.diseaseName);
+               exports.properties(response.data.diseaseProperties);
+           });
+        };
+
+        exports.init = function() {
+            _fetchDisease();
+        };
     };
 });

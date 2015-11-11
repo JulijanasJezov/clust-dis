@@ -111,6 +111,9 @@
     <Content Include="App\diseases\addDisease\addDisease.html" />
     <Content Include="App\diseases\addDisease\addDisease.js" />
     <Content Include="App\diseases\addDisease\addDiseaseModel.js" />
+    <Content Include="App\diseases\editDisease\editDisease.html" />
+    <Content Include="App\diseases\editDisease\editDisease.js" />
+    <Content Include="App\diseases\editDisease\editDiseaseModel.js" />
     <Content Include="App\diseases\listDiseases\listDiseases.html" />
     <Content Include="App\diseases\listDiseases\listDiseases.js" />
     <Content Include="App\diseases\listDiseases\listDiseasesModel.js" />

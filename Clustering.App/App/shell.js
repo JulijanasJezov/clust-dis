@@ -6,7 +6,8 @@
             router.map([
               { route: ["", "cluster/diseases/:id"], title: "Clustering", moduleId: "clustering/clustering", nav: true },
               { route: ["diseases"], title: "Diseases", moduleId: "diseases/listDiseases/listDiseases", nav: true },
-              { route: ["diseases/add"], title: "Diseases", moduleId: "diseases/addDisease/addDisease", nav: false }
+              { route: ["diseases/add"], title: "Diseases", moduleId: "diseases/addDisease/addDisease", nav: false },
+              { route: ["diseases/:id/edit"], title: "Diseases", moduleId: "diseases/editDisease/editDisease", nav: false }
             ]).buildNavigationModel();
 
             return router.activate();
