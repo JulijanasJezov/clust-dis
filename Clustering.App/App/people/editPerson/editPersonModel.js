@@ -97,7 +97,7 @@
         var _fetchDiseases = function() {
             guajax.get("api/diseases")
             .then(function(response) {
-                exports.diseases(response.data);
+                exports.diseases(response.data.results);
             });
         };
 
