@@ -61,8 +61,11 @@
             var results = [];
             _.each(exports.clusteredData(), function(cluster) {
                 results.push(_.filter(cluster.dataPoints, function(person) {
-                    return person.firstName == exports.searchValue() || person.lastName == exports.searchValue()
-                        || person.firstName + ' ' + person.lastName == exports.searchValue();
+                    var firstName = person.firstName.toLowerCase();
+                    var lastName = person.lastName.toLowerCase();
+                    var searchVal = exports.searchValue().toLowerCase();
+                    return firstName == searchVal || lastName == searchVal
+                        || firstName + ' ' + lastName == searchVal;
                 }));
             });
             results = _.flatten(results);

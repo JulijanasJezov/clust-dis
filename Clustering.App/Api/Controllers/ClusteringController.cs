@@ -59,6 +59,11 @@ namespace Clustering.App.Api.Controllers
 
             }
 
+            if (dataPoints.Count() <= 10)
+            {
+                return ApiBadRequest("Not enough data to cluster");
+            }
+
             var km = new KMAlgorithm();
 
             var clusterGroupAssignedData = km.ClusterData(dataPoints, clusterData.CalculateSilhouette);
