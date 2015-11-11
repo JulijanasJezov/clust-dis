@@ -22,6 +22,7 @@
     .then(function(msg) {
         message(msg);
         showMessage(true);
+        hideMessageOnNextExecute = false;
     });
 
     return {

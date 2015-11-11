@@ -9,7 +9,8 @@
               { route: ["diseases/add"], title: "Diseases", moduleId: "diseases/addDisease/addDisease", nav: false },
               { route: ["diseases/:id/edit"], title: "Diseases", moduleId: "diseases/editDisease/editDisease", nav: false },
               { route: ["people"], title: "People", moduleId: "people/listPeople/listPeople", nav: true },
-              { route: ["people/add"], title: "People", moduleId: "people/addPerson/addPerson", nav: false }
+              { route: ["people/add"], title: "People", moduleId: "people/addPerson/addPerson", nav: false },
+              { route: ["people/:id/edit"], title: "People", moduleId: "people/editPerson/editPerson", nav: false }
             ]).buildNavigationModel();
 
             return router.activate();

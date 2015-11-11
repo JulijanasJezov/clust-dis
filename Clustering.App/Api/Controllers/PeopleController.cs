@@ -81,19 +81,109 @@ namespace Clustering.App.Api.Controllers
             Db.People.Add(personToAdd);
             Db.SaveChanges();
 
-            foreach (var diseaseProperty in person.DiseaseProperties)
+            if (person.DiseaseProperties != null)
             {
-                Db.PersonDiseasePropertyAssociations.Add(new PersonDiseasePropertyAssociation
+                foreach (var diseaseProperty in person.DiseaseProperties)
                 {
-                    DiseasePropertyId = diseaseProperty.DiseasePropertyId,
-                    Score = diseaseProperty.Score,
-                    PersonId = personToAdd.PersonId
-                });
+                    Db.PersonDiseasePropertyAssociations.Add(new PersonDiseasePropertyAssociation
+                    {
+                        DiseasePropertyId = diseaseProperty.DiseasePropertyId,
+                        Score = diseaseProperty.Score,
+                        PersonId = personToAdd.PersonId
+                    });
+                }
             }
 
             Db.SaveChanges();
 
             return ApiOk();
+        }
+
+        [Route("{personId}")]
+        public IHttpActionResult PatchPerson(int personId, PersonApiModel updatePerson)
+        {
+            if (updatePerson == null)
+            {
+                return ApiBadRequest();
+            }
+
+            if (updatePerson.FirstName == null || updatePerson.LastName == null || updatePerson.DateOfBirth == null)
+            {
+                return ApiBadRequest("Required fields missing");
+            }
+
+            var person = Db.People.Where(s => s.PersonId == personId).SingleOrDefault();
+
+            if (person == null)
+            {
+                return ApiNotFound();
+            }
+
+            person.Title = updatePerson.Title;
+            person.FirstName = updatePerson.FirstName;
+            person.LastName = updatePerson.LastName;
+            person.DateOfBirth = updatePerson.DateOfBirth.Value;
+            person.Gender = (GenderType)Enum.Parse(typeof(GenderType), updatePerson.Gender);
+            
+            Db.SaveChanges();
+
+            if (updatePerson.RemoveDiseases != null)
+            {
+                foreach (var diseaseId in updatePerson.RemoveDiseases)
+                {
+                    var diseaseProperties = Db.PersonDiseasePropertyAssociations
+                        .Where(s => s.PersonId == personId)
+                        .Where(s => s.DiseaseProperty.DiseaseId == diseaseId);
+
+                    Db.PersonDiseasePropertyAssociations.RemoveRange(diseaseProperties);
+                    Db.SaveChanges();
+                }
+            }
+
+            if (updatePerson.DiseaseProperties != null)
+            {
+                foreach (var diseaseProperty in updatePerson.DiseaseProperties)
+                {
+                    Db.PersonDiseasePropertyAssociations.Add(new PersonDiseasePropertyAssociation
+                    {
+                        DiseasePropertyId = diseaseProperty.DiseasePropertyId,
+                        Score = diseaseProperty.Score,
+                        PersonId = personId
+                    });
+                }
+            }
+
+            Db.SaveChanges();
+
+            return ApiOk();
+        }
+
+        [Route("{personId}")]
+        public IHttpActionResult GetPerson(int personId)
+        {
+            var person = Db.People.Where(s => s.PersonId == personId)
+                .SingleOrDefault();
+
+            if (person == null)
+            {
+                return ApiNotFound();
+            }
+
+            var diseases = Db.PersonDiseasePropertyAssociations
+                .Where(s => s.PersonId == personId)
+                .Select(s => s.DiseaseProperty.Disease)
+                .Distinct();
+
+
+            return ApiOk(new
+            {
+                Title = person.Title,
+                FirstName = person.FirstName,
+                LastName = person.LastName,
+                DateOfBirth = person.DateOfBirth,
+                Gender = person.Gender.ToString(),
+                Diseases = diseases
+            });
         }
     }
 }

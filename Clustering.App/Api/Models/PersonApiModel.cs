@@ -14,5 +14,6 @@ namespace Clustering.App.Api.Models
         public DateTime? DateOfBirth { get; set; }
         public string Gender { get; set; }
         public List<PersonDiseaseProperty> DiseaseProperties { get; set; }
+        public List<int> RemoveDiseases { get; set; }
     }
 }

@@ -120,6 +120,9 @@
     <Content Include="App\people\addPerson\addPerson.html" />
     <Content Include="App\people\addPerson\addPerson.js" />
     <Content Include="App\people\addPerson\addPersonModel.js" />
+    <Content Include="App\people\editPerson\editPerson.html" />
+    <Content Include="App\people\editPerson\editPerson.js" />
+    <Content Include="App\people\editPerson\editPersonModel.js" />
     <Content Include="App\people\listPeople\listPeople.html" />
     <Content Include="App\people\listPeople\listPeople.js" />
     <Content Include="App\people\listPeople\listPeopleModel.js" />

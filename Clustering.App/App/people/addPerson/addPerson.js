@@ -5,7 +5,7 @@
         model(new addPersonModel());
 
         model().delegate.addedSuccessfully = function() {
-            app.trigger("people:message", "A new Person was added successfully.");
+            app.trigger("people:message", "A new Person was added successfully");
             router.navigate("#people");
         };
 
