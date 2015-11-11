@@ -32,9 +32,11 @@
     };
 
     var _fetchDiseaseTabs = function() {
-        return guajax.get("api/diseases")
+        return guajax.get("api/diseases", {
+            pageSize: -1
+        })
         .then(function(response) {
-            diseaseTabs(response.data);
+            diseaseTabs(response.data.results);
 
             if (!selectedDiseaseTabId()) {
                 var defaultTab = _.first(diseaseTabs()).diseaseId;
