@@ -201,6 +201,7 @@
     <Compile Include="Api\Controllers\PeopleController.cs" />
     <Compile Include="Api\Controllers\SeedController.cs" />
     <Compile Include="Api\Models\Clustering\ClusteredDataApiModel.cs" />
+    <Compile Include="Api\Models\Diseases\DiseaseApiModel.cs" />
     <Compile Include="Api\Models\Diseases\PostDiseaseApiModel.cs" />
     <Compile Include="Api\Models\Clustering\PostClusterApiModel.cs" />
     <Compile Include="Api\Models\PagedListModel.cs" />

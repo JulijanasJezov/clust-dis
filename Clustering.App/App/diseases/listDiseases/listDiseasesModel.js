@@ -1,4 +1,4 @@
-﻿define(["shared/guajax"], function(guajax) {
+﻿define(["shared/guajax", "shared/pager"], function(guajax, pager) {
     return function listDiseasesModel(diseaseId) {
         var exports = this;
 
@@ -17,11 +17,17 @@
         };
 
         var _fetchDiseases = function() {
-            guajax.get("api/diseases")
+            guajax.getWithAbortPrevious("api/diseases", {
+                pageNumber: exports.pager.currentPageNumber(),
+                filterQuery: exports.pager.filterQuery()
+            })
             .then(function(response) {
-                exports.diseases(response.data);
+                exports.pager.updatePaging(response.data);
+                exports.diseases(response.data.results);
             });
         };
+
+        exports.pager = new pager(_fetchDiseases);
 
         exports.init = function() {
             _fetchDiseases();

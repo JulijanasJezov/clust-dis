@@ -24,9 +24,9 @@ namespace Clustering.App.Api.Controllers
 
             if (!string.IsNullOrWhiteSpace(filterQuery))
             {
-                filterQuery = filterQuery.Trim().ToLower();
-                people = people.Where(s => (s.FirstName + " " + s.LastName).ToLower().StartsWith(filterQuery) ||
-                    (s.LastName + " " + s.FirstName).ToLower().StartsWith(filterQuery));
+                var filter = filterQuery.Trim().ToLower();
+                people = people.Where(s => (s.FirstName + " " + s.LastName).ToLower().StartsWith(filter) ||
+                    (s.LastName + " " + s.FirstName).ToLower().StartsWith(filter));
             }
 
             people = people.OrderBy(s => s.LastName).ThenBy(s => s.FirstName);

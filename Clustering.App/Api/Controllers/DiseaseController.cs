@@ -1,4 +1,5 @@
-﻿using Clustering.Model;
+﻿using Clustering.App.Api.Models;
+using Clustering.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +11,44 @@ namespace Clustering.App.Api.Controllers
     public class DiseaseController : BaseController
     {
         [Route("")]
-        public IHttpActionResult GetDiseases()
+        public IHttpActionResult GetDiseases(
+            int pageNumber = 1,
+            int pageSize = 15,
+            string orderBy = null,
+            string direction = null,
+            string filterQuery = null)
         {
-            var diseases = Db.Diseases
-                .Select(s => new
+            var diseases = Db.Diseases.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filterQuery))
+            {
+                var filter = filterQuery.Trim().ToLower();
+                diseases = diseases.Where(s => s.Name.ToLower().StartsWith(filter));
+            }
+
+            diseases = diseases.OrderBy(s => s.Name);
+
+            var pagedModel = new PagedListModel<DiseaseApiModel>
+            {
+                Total = diseases.Count(),
+                PageNumber = pageNumber,
+                ItemsPerPage = pageSize,
+                FilterQuery = filterQuery
+            };
+
+            pagedModel.Results = diseases
+                .Skip(pagedModel.StartIndex)
+                .Take(pagedModel.ItemsPerPage)
+                .ToList()
+                .Select(s => new DiseaseApiModel
                 {
                     DiseaseId = s.DiseaseId,
                     Name = s.Name,
-                    DiseaseProperties = Db.DiseaseProperties.Where(j => j.DiseaseId == s.DiseaseId),
+                    DiseaseProperties = Db.DiseaseProperties.Where(j => j.DiseaseId == s.DiseaseId).ToList(),
                     CanDelete = !Db.People.Where(a => a.PersonDiseaseProperties.Where(b => b.DiseaseProperty.DiseaseId == s.DiseaseId).Any()).Any()
-                })
-                .ToList();
+                });
 
-            return ApiOk(diseases);
+            return ApiOk(pagedModel);
         }
 
         [Route("")]

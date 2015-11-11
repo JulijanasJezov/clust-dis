@@ -2,7 +2,22 @@
 
     <div class="alert alert-success" data-bind="visible: $root.message(), text: $root.message()"></div>
 
-    <a class="btn btn-default" href="#diseases/add">Add Disease</a>
+    <div class="row">
+        <div class="col-md-4">
+            <a class="btn btn-default" href="#diseases/add">Add Disease</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <input style="margin-top:20px; margin-bottom:20px;" type="text" class="form-control form-control-search" data-bind="textInput: pager.filterQuery" placeholder="Filter Diseases" maxlength="20">
+        </div>
+        <div class="col-md-2 pull-right">
+            <div class="btn-group pull-right" data-bind="compose: { view: 'shared/pager', model: pager }"></div>
+        </div>
+    </div>
+
+    
 
     <div class="row" style="margin-top:10px;">
         <div class="col-md-12">

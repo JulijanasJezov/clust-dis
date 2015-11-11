@@ -18,7 +18,7 @@
         exports.addProperty = function() {
             if (!exports.propertyName()) return;
 
-            var property = { name: exports.propertyName() };
+            var property = { name: exports.propertyName(), canDelete: true };
             exports.propertyExists(_.find(exports.properties(), function(existingProperty) {
                 return existingProperty.name === property.name;
             }));
