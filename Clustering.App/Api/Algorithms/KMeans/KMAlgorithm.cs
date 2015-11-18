@@ -126,6 +126,7 @@ namespace Clustering.App.Api.Algorithms
                     normalizedDataToCluster[dataPoint].Cluster = rawDataToCluster[dataPoint].Cluster = closestCluster;
                 }
 
+                // Used for Standard Deviation graph
                 foreach (var property in normalizedDataToCluster[dataPoint].Properties)
                 {
                     sum += property.Value;

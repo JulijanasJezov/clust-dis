@@ -74,8 +74,8 @@
                 yaxis: {
                     title: 'Mean'
                 }
-            }
-            debugger;
+            };
+
             Plotly.newPlot('chart', data, layout);
         };
 

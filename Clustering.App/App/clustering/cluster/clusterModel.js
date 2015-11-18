@@ -76,6 +76,7 @@
         };
 
         exports.search = function() {
+            if (!exports.searchValue()) return;
             var results = [];
             _.each(exports.clusteredData(), function(cluster) {
                 results.push(_.filter(cluster.dataPoints, function(person) {

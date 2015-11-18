@@ -49,5 +49,12 @@ namespace Clustering.App.Api.Algorithms
 
             return isEmpty;
         }
+
+        public static double CalculateStandardDeviation(IDictionary<string, double> properties)
+        {
+
+
+            return 1.0;
+        }
     }
 }
