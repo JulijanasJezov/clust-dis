@@ -64,69 +64,16 @@
             //    series: data
             //});
 
-            debugger;
             var layout = {
-                shapes: [
-                    {
-                        type: 'circle',
-                        xref: 'x',
-                        yref: 'y',
-                        x0: _.min(data[0].x),
-                        y0: _.min(data[0].y),
-                        x1: _.max(data[0].x),
-                        y1: _.max(data[0].y),
-                        opacity: 0.2,
-                        fillcolor: 'blue',
-                        line: {
-                            color: 'blue'
-                        }
-                    },
-                    {
-                        type: 'circle',
-                        xref: 'x',
-                        yref: 'y',
-                        x0: _.min(data[1].x),
-                        y0: _.min(data[1].y),
-                        x1: _.max(data[1].x),
-                        y1: _.max(data[1].y),
-                        opacity: 0.2,
-                        fillcolor: 'orange',
-                        line: {
-                            color: 'orange'
-                        }
-                    },
-                    {
-                        type: 'circle',
-                        xref: 'x',
-                        yref: 'y',
-                        x0: _.min(data[2].x),
-                        y0: _.min(data[2].y),
-                        x1: _.max(data[2].x),
-                        y1: _.max(data[2].y),
-                        opacity: 0.2,
-                        fillcolor: 'green',
-                        line: {
-                            color: 'green'
-                        }
-                    },
-                    {
-                        type: 'circle',
-                        xref: 'x',
-                        yref: 'y',
-                        x0: _.min(data[3].x),
-                        y0: _.min(data[3].y),
-                        x1: _.max(data[3].x),
-                        y1: _.max(data[3].y),
-                        opacity: 0.2,
-                        fillcolor: 'red',
-                        line: {
-                            color: 'red'
-                        }
-                    }
-                ],
                 height: 500,
                 width: 800,
-                showlegend: false
+                showlegend: true,
+                xaxis: {
+                    title: 'Standard Deviation'
+                },
+                yaxis: {
+                    title: 'Mean'
+                }
             }
             debugger;
             Plotly.newPlot('chart', data, layout);

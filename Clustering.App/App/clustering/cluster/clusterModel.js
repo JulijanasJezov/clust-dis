@@ -31,14 +31,18 @@
                 var chartData = _.map(response.data, function(cluster) {
                     var xs = [];
                     var ys = [];
+                    var text = []
                     _.each(cluster.dataPoints, function(dp) {
-                        xs.push(dp.mean);
-                        ys.push(dp.standardDeviation);
+                        xs.push(dp.standardDeviation);
+                        ys.push(dp.mean);
+                        text.push(dp.firstName + " " + dp.lastName);
                     });
                     return {
                         x: xs,
                         y: ys,
-                        mode: 'markers'
+                        text: text,
+                        mode: 'markers',
+                        name: cluster.name
                     };
                 });
 

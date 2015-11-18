@@ -126,14 +126,14 @@ namespace Clustering.App.Api.Algorithms
                     normalizedDataToCluster[dataPoint].Cluster = rawDataToCluster[dataPoint].Cluster = closestCluster;
                 }
 
-                foreach (var property in rawDataToCluster[dataPoint].Properties)
+                foreach (var property in normalizedDataToCluster[dataPoint].Properties)
                 {
                     sum += property.Value;
                 }
 
                 rawDataToCluster[dataPoint].Mean = sum / normalizedDataToCluster[dataPoint].Properties.Count();
 
-                foreach (var property in rawDataToCluster[dataPoint].Properties)
+                foreach (var property in normalizedDataToCluster[dataPoint].Properties)
                 {
                     var eachDev = property.Value - rawDataToCluster[dataPoint].Mean;
                     stdDev += Math.Pow(eachDev, 2);
