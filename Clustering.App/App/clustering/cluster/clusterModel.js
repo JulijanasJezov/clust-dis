@@ -29,9 +29,23 @@
                 exports.clusteredData(response.data);
 
                 var chartData = _.map(response.data, function(cluster) {
-                    var chartSerie = new scatterSeriesModel(cluster);
-                    return chartSerie;
+                    var xs = [];
+                    var ys = [];
+                    _.each(cluster.dataPoints, function(dp) {
+                        xs.push(dp.mean);
+                        ys.push(dp.standardDeviation);
+                    });
+                    return {
+                        x: xs,
+                        y: ys,
+                        mode: 'markers'
+                    };
                 });
+
+                //var chartData = _.map(response.data, function(cluster) {
+                //    var chartSerie = new scatterSeriesModel(cluster);
+                //    return chartSerie;
+                //});
 
                 exports.delegate.showGraph(chartData);
             });

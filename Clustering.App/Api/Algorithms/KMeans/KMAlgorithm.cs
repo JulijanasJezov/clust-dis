@@ -112,6 +112,8 @@ namespace Clustering.App.Api.Algorithms
             
             for (int dataPoint = 0; dataPoint < normalizedDataToCluster.Count; dataPoint++)
             {
+                double sum = 0;
+                double stdDev = 0;
                 for (int clusterIndex = 0; clusterIndex < numberOfClusters; clusterIndex++)
                 {
                     distances[clusterIndex] = Helpers.EuclideanDistance(normalizedDataToCluster[dataPoint], clusters[clusterIndex]);
@@ -123,6 +125,22 @@ namespace Clustering.App.Api.Algorithms
                     changed = true;
                     normalizedDataToCluster[dataPoint].Cluster = rawDataToCluster[dataPoint].Cluster = closestCluster;
                 }
+
+                foreach (var property in rawDataToCluster[dataPoint].Properties)
+                {
+                    sum += property.Value;
+                }
+
+                rawDataToCluster[dataPoint].Mean = sum / normalizedDataToCluster[dataPoint].Properties.Count();
+
+                foreach (var property in rawDataToCluster[dataPoint].Properties)
+                {
+                    var eachDev = property.Value - rawDataToCluster[dataPoint].Mean;
+                    stdDev += Math.Pow(eachDev, 2);
+                }
+
+                rawDataToCluster[dataPoint].StandardDeviation = Math.Sqrt(stdDev / normalizedDataToCluster[dataPoint].Properties.Count());
+
             }
 
             if (Helpers.HasEmptyCluster(normalizedDataToCluster)) return false;

@@ -186,6 +186,7 @@
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\knockout-3.2.0.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\plotly-latest.min.js" />
     <Content Include="Scripts\q.js" />
     <Content Include="Scripts\r.js" />
     <Content Include="Scripts\require.js" />
