@@ -48,8 +48,6 @@ namespace Clustering.App.Api.Algorithms
                 }
             }
 
-            rawDataToCluster = Helpers.CalculateStandardDeviation(normalizedDataToCluster, rawDataToCluster);
-
             rawDataToCluster = Helpers.ComputePCA(normalizedDataToCluster, rawDataToCluster);
 
             return rawDataToCluster;

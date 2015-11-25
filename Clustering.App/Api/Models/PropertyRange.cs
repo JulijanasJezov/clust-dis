@@ -12,5 +12,6 @@ namespace Clustering.App.Api
         public double MinValue { get; set; }
         public double MaxValue { get; set; }
         public double AverageValue { get; set; }
+        public double StandardDeviation { get; set; }
     }
 }

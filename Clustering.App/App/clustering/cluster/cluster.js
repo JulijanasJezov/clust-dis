@@ -27,10 +27,10 @@
                 var xs = [];
                 var ys = [];
                 var text = []
-                _.each(cluster.dataPoints, function(dp) {
-                    xs.push(dp.standardDeviation);
-                    ys.push(dp.mean);
-                    text.push(dp.firstName + " " + dp.lastName);
+                _.each(cluster.propertiesDetails, function(pd) {
+                    xs.push(pd.standardDeviation);
+                    ys.push(pd.averageValue);
+                    text.push(pd.name);
                 });
                 return {
                     x: xs,

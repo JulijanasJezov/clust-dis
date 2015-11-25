@@ -51,32 +51,37 @@ namespace Clustering.App.Api.Algorithms
             return isEmpty;
         }
 
-        public static List<KMDataPoint> CalculateStandardDeviation(List<KMDataPoint> normalizedDataToCluster, List<KMDataPoint> rawDataToCluster)
+        /*
+         *  This was redone to calculate std deviation for each property in the whole cluster rather than for each data point using different properties
+
+        public static List<KMDataPoint> CalculateStandardDeviation(List<KMDataPoint> rawDataToCluster)
         {
-            for (int dataPoint = 0; dataPoint < normalizedDataToCluster.Count; dataPoint++)
+            for (int dataPoint = 0; dataPoint < rawDataToCluster.Count; dataPoint++)
             {
                 double sum = 0;
                 double stdDev = 0;
 
-                foreach (var property in normalizedDataToCluster[dataPoint].Properties)
+                foreach (var property in rawDataToCluster[dataPoint].Properties)
                 {
                     sum += property.Value;
                 }
 
-                rawDataToCluster[dataPoint].Mean = sum / normalizedDataToCluster[dataPoint].Properties.Count();
+                rawDataToCluster[dataPoint].Mean = sum / rawDataToCluster[dataPoint].Properties.Count();
 
-                foreach (var property in normalizedDataToCluster[dataPoint].Properties)
+                foreach (var property in rawDataToCluster[dataPoint].Properties)
                 {
                     var eachDev = property.Value - rawDataToCluster[dataPoint].Mean;
                     stdDev += Math.Pow(eachDev, 2);
                 }
 
-                rawDataToCluster[dataPoint].StandardDeviation = Math.Sqrt(stdDev / normalizedDataToCluster[dataPoint].Properties.Count());
+                rawDataToCluster[dataPoint].StandardDeviation = Math.Sqrt(stdDev / rawDataToCluster[dataPoint].Properties.Count());
 
             }
 
             return rawDataToCluster;
         }
+         * 
+         */
 
         public static List<KMDataPoint> ComputePCA(List<KMDataPoint> normalizedDataToCluster, List<KMDataPoint> rawDataToCluster)
         {
