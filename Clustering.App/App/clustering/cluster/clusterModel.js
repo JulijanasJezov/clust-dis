@@ -3,7 +3,7 @@
         var exports = this;
 
         exports.delegate = {
-            showGraphs: function(clustersData, deviationData, silhouetteData) { }
+            showGraphs: function(clusteredData, calculateSilhouette) { }
         }
 
         // page data
@@ -52,78 +52,13 @@
             .then(function(response) {
                 exports.clusteredData(response.data);
 
-                var clustersData = _.map(response.data, function(cluster) {
-                    var xs = [];
-                    var ys = [];
-                    var text = []
-                    _.each(cluster.dataPoints, function(dp) {
-                        xs.push(dp.xValue);
-                        ys.push(dp.yValue);
-                        text.push(dp.firstName + " " + dp.lastName);
-                    });
-                    return {
-                        x: xs,
-                        y: ys,
-                        text: text,
-                        mode: 'markers',
-                        name: cluster.name
-                    };
-                });
-
-                var deviationData = _.map(response.data, function(cluster) {
-                    var xs = [];
-                    var ys = [];
-                    var text = []
-                    _.each(cluster.dataPoints, function(dp) {
-                        xs.push(dp.standardDeviation);
-                        ys.push(dp.mean);
-                        text.push(dp.firstName + " " + dp.lastName);
-                    });
-                    return {
-                        x: xs,
-                        y: ys,
-                        text: text,
-                        mode: 'markers',
-                        name: cluster.name
-                    };
-                });
-
-                var silhouetteData = null;
-
                 if (exports.calculateSilhouette()) {
-                    var xs = [];
-                    var ys = [];
-
-                    _.each(response.data, function(cluster) {
-                        xs.push(cluster.name);
-                        ys.push(calculateAverage(cluster.dataPoints));
-                    });
-
-                    silhouetteData = [
-                      {
-                          x: xs,
-                          y: ys,
-                          type: 'bar'
-                      }
-                    ];
-
                     exports.silhouetteCalculated(true);
                 }
 
-                exports.delegate.showGraphs(clustersData, deviationData, silhouetteData);
+                exports.delegate.showGraphs(exports.clusteredData(), exports.calculateSilhouette());
             });
         };
-
-        function calculateAverage(dataPoints) {
-            var sum = 0;
-            var numberOfDataPoints = 0;
-            var data = _.each(dataPoints, function(dataPoint) {
-                sum += dataPoint.silhouette;
-                numberOfDataPoints++;
-            });
-
-            return sum / numberOfDataPoints;
-        }
 
         exports.search = function() {
             if (!exports.searchValue()) return;
