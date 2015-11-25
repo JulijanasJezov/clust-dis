@@ -50,11 +50,31 @@ namespace Clustering.App.Api.Algorithms
             return isEmpty;
         }
 
-        public static double CalculateStandardDeviation(IDictionary<string, double> properties)
+        public static List<KMDataPoint> CalculateStandardDeviation(List<KMDataPoint> normalizedDataToCluster, List<KMDataPoint> rawDataToCluster)
         {
+            for (int dataPoint = 0; dataPoint < normalizedDataToCluster.Count; dataPoint++)
+            {
+                double sum = 0;
+                double stdDev = 0;
 
+                foreach (var property in normalizedDataToCluster[dataPoint].Properties)
+                {
+                    sum += property.Value;
+                }
 
-            return 1.0;
+                rawDataToCluster[dataPoint].Mean = sum / normalizedDataToCluster[dataPoint].Properties.Count();
+
+                foreach (var property in normalizedDataToCluster[dataPoint].Properties)
+                {
+                    var eachDev = property.Value - rawDataToCluster[dataPoint].Mean;
+                    stdDev += Math.Pow(eachDev, 2);
+                }
+
+                rawDataToCluster[dataPoint].StandardDeviation = Math.Sqrt(stdDev / normalizedDataToCluster[dataPoint].Properties.Count());
+
+            }
+
+            return rawDataToCluster;
         }
     }
 }
