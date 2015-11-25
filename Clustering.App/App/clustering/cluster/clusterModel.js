@@ -29,31 +29,35 @@
                 exports.clusteredData(response.data);
 
                 var chartData = _.map(response.data, function(cluster) {
-                    var xs = [];
-                    var ys = [];
-                    var text = []
-                    _.each(cluster.dataPoints, function(dp) {
-                        xs.push(dp.standardDeviation);
-                        ys.push(dp.mean);
-                        text.push(dp.firstName + " " + dp.lastName);
-                    });
-                    return {
-                        x: xs,
-                        y: ys,
-                        text: text,
-                        mode: 'markers',
-                        name: cluster.name
-                    };
+                    var chartSerie = new scatterSeriesModel(cluster);
+                    return chartSerie;
                 });
-
-                //var chartData = _.map(response.data, function(cluster) {
-                //    var chartSerie = new scatterSeriesModel(cluster);
-                //    return chartSerie;
-                //});
 
                 exports.delegate.showGraph(chartData);
             });
         };
+
+        exports.showDeviation = function() {
+            var chartData = _.map(exports.clusteredData(), function(cluster) {
+                var xs = [];
+                var ys = [];
+                var text = []
+                _.each(cluster.dataPoints, function(dp) {
+                    xs.push(dp.standardDeviation);
+                    ys.push(dp.mean);
+                    text.push(dp.firstName + " " + dp.lastName);
+                });
+                return {
+                    x: xs,
+                    y: ys,
+                    text: text,
+                    mode: 'markers',
+                    name: cluster.name
+                };
+            });
+
+            exports.delegate.showDeviationGraph(chartData);
+        }
 
         exports.showValidity = function() {
             function calculateAverage(dataPoints) {
