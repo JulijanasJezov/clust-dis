@@ -9,7 +9,7 @@ namespace Clustering.App.Api.Algorithms
         private List<KMDataPoint> rawDataToCluster = new List<KMDataPoint>();
         private List<KMDataPoint> normalizedDataToCluster = new List<KMDataPoint>();
         private List<KMDataPoint> clusters = new List<KMDataPoint>();
-        private int numberOfClusters = 5;
+        private int numberOfClusters = 3;
 
         public List<KMDataPoint> ClusterData(List<KMDataPoint> dataPoints, bool calculateSilhouette = false)
         {
@@ -47,6 +47,8 @@ namespace Clustering.App.Api.Algorithms
             }
 
             rawDataToCluster = Helpers.CalculateStandardDeviation(normalizedDataToCluster, rawDataToCluster);
+
+            rawDataToCluster = Helpers.ComputePCA(normalizedDataToCluster, rawDataToCluster);
 
             return rawDataToCluster;
         }

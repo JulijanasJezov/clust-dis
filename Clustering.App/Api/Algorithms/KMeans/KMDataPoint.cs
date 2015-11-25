@@ -8,6 +8,8 @@ namespace Clustering.App.Api.Algorithms
         public string LastName { get; set; }
         public IDictionary<string, double> Properties { get; set; }
         public int Cluster { get; set; }
+        public double yValue { get; set; }
+        public double xValue { get; set; }
         public double Mean { get; set; }
         public double StandardDeviation { get; set; }
         public double Silhouette { get; set; }

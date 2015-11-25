@@ -56,8 +56,8 @@
                             }
                         },
                         tooltip: {
-                            headerFormat: '<b>{series.name}</b><br>',
-                            pointFormat: '{point.x} years, {point.y} dl'
+                            headerFormat: '<b>{series.name}, {point.name}</b><br>',
+                            pointFormat: '{point.x} PC1, {point.y} PC2'
                         }
                     }
                 },

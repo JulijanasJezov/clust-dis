@@ -8,8 +8,8 @@
         function mapDataPoints(dataPoints) {
             var data = _.map(dataPoints, function(dataPoint) {
                 return {
-                    x: dataPoint.properties.age,
-                    y: dataPoint.properties.depressionLevel,
+                    x: dataPoint.xValue,
+                    y: dataPoint.yValue,
                     name: dataPoint.firstName + dataPoint.lastName
                 };
             });
