@@ -27,16 +27,14 @@
                             </tr>
                             <!-- /ko -->
                         </table>
+                        <div class="form-group" data-bind="css: { 'has-error': numberOfClustersError() }">
+                            <label>Number of Clusters</label>
+                            <input class="form-control" data-bind="value: numberOfClusters">
+                            <span class="help-block " data-bind="visible: numberOfClustersError()">Number of Clusters must be at least 2</span>
+                        </div>
                         <input type="checkbox" data-bind="checked: calculateSilhouette"> Calculate Clusters Validity
                         <div class="form-group">
                             <button class="btn btn-default" data-bind="enable: clusterPropertyIds().length > 1 || (clusterPropertyIds().length > 0 && includeAge()), click: showGraph">Cluster Data</button>
-                            
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-default" data-bind="visible: clusteredData(), click: showDeviation">Show Standard Deviation</button>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-default" data-bind="visible: clusteredData() && calculateSilhouette(), click: showValidity">Show Validity</button>
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="search">
@@ -58,9 +56,24 @@
                 </div>
             </div>
 
-            <div class="col-md-8">
-                <div id="chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                <div id="deviation-chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            <div class="col-md-8" data-bind="visible: clusteredData()">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#clustersGraph" role="tab" data-toggle="tab">Clusters</a></li>
+                    <li role="presentation"><a href="#stdDeviationGraph" role="tab" data-toggle="tab">Standard Deviation</a></li>
+                    <li role="presentation" data-bind="visible: silhouetteCalculated()"><a href="#validityGraph" role="tab" data-toggle="tab">Silhouette Validation</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="clustersGraph">
+                        <div id="clusters-chart" style="min-width: 310px; height: 500px; max-width: 800px; margin: 0 auto"></div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="stdDeviationGraph">
+                        <div id="deviation-chart" style="min-width: 310px; height: 500px; max-width: 800px; margin: 0 auto"></div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="validityGraph">
+                        <div id="validity-chart" data-bind="visible: silhouetteCalculated()"  style="min-width: 300px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-2">
@@ -77,10 +90,6 @@
             </div>
 
         </fieldset>
-    </div>
-
-    <div class="row">
-        <div id="validityChart" style="min-width: 300px; height: 400px; max-width: 800px; margin: 0 auto"></div>
     </div>
 
     <div class="modal fade person-details" tabindex="-1" role="dialog" data-bind="with: personSelected">

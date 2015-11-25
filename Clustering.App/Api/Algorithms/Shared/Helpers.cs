@@ -96,13 +96,12 @@ namespace Clustering.App.Api.Algorithms
 
             }
 
-            // Creates the Principal Component Analysis of the given source
+            // Creates the Principal Component Analysis of the given matrix
             var pca = new PrincipalComponentAnalysis(propertiesMatrix, AnalysisMethod.Center);
 
             // Compute the Principal Component Analysis
             pca.Compute();
 
-            // Creates a projection considering 80% of the information
             double[,] components = pca.Transform(propertiesMatrix, 2);
 
             var dpIndex = 0;

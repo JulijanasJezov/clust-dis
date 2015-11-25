@@ -13,6 +13,11 @@ namespace Clustering.App.Api.Controllers
         [Route("")]
         public IHttpActionResult PostClusterData(PostClusterApiModel clusterData)
         {
+            if (clusterData.NumberOfClusters < 2)
+            {
+                return ApiBadRequest("Number of Clusters needs to be at least 2");
+            }
+
             var people = Db.People
                 .Where(s => s.PersonDiseaseProperties
                             .Where(a => a.DiseaseProperty.DiseaseId == clusterData.ClusterDiseaseId)
@@ -66,7 +71,7 @@ namespace Clustering.App.Api.Controllers
 
             var km = new KMAlgorithm();
 
-            var clusterGroupAssignedData = km.ClusterData(dataPoints, clusterData.CalculateSilhouette);
+            var clusterGroupAssignedData = km.ClusterData(dataPoints, clusterData.NumberOfClusters, clusterData.CalculateSilhouette);
 
             var clusteredData = clusterGroupAssignedData
                 .GroupBy(s => s.Cluster)

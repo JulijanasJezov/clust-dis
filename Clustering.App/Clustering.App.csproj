@@ -136,7 +136,6 @@
     <Content Include="App\people\listPeople\listPeopleModel.js" />
     <Content Include="App\shared\pager.html" />
     <Content Include="App\shared\pager.js" />
-    <Content Include="App\shared\scatterSeriesModel.js" />
     <Content Include="App\shared\guajax.js" />
     <Content Include="App\main.js" />
     <Content Include="App\shell.html" />
@@ -188,8 +187,6 @@
     <Content Include="Scripts\durandal\system.js" />
     <Content Include="Scripts\durandal\viewEngine.js" />
     <Content Include="Scripts\durandal\viewLocator.js" />
-    <Content Include="Scripts\exporting.js" />
-    <Content Include="Scripts\highcharts.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\knockout-3.2.0.js" />

@@ -9,11 +9,13 @@ namespace Clustering.App.Api.Algorithms
         private List<KMDataPoint> rawDataToCluster = new List<KMDataPoint>();
         private List<KMDataPoint> normalizedDataToCluster = new List<KMDataPoint>();
         private List<KMDataPoint> clusters = new List<KMDataPoint>();
-        private int numberOfClusters = 3;
+        private int numberOfClusters;
 
-        public List<KMDataPoint> ClusterData(List<KMDataPoint> dataPoints, bool calculateSilhouette = false)
+        public List<KMDataPoint> ClusterData(List<KMDataPoint> dataPoints, int numOfClusters, bool calculateSilhouette = false)
         {
             rawDataToCluster = dataPoints;
+
+            numberOfClusters = numOfClusters;
 
             for (int i = 0; i < numberOfClusters; i++)
             {

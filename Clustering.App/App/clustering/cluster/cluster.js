@@ -4,69 +4,22 @@
     var activate = function(diseaseId) {
         model(new clusterModel(diseaseId));
 
-        model().delegate.showGraph = function(data) {
-            $('#chart').highcharts({
-                chart: {
-                    type: 'scatter',
-                    zoomType: 'xy'
+        model().delegate.showGraphs = function(clustersData, deviationData, silhouetteData) {
+            var clustersLayout = {
+                height: 500,
+                width: 800,
+                showlegend: true,
+                xaxis: {
+                    title: 'PC1'
                 },
-                title: {
-                    text: model().diseaseName()
-                },
-                xAxis: {
-                    title: {
-                        enabled: true,
-                        text: 'Age'
-                    },
-                    startOnTick: true,
-                    endOnTick: true,
-                    showLastLabel: true
-                },
-                yAxis: {
-                    title: {
-                        text: 'Depression Level'
-                    }
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'left',
-                    verticalAlign: 'top',
-                    x: 100,
-                    y: 70,
-                    floating: true,
-                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-                    borderWidth: 1
-                },
-                plotOptions: {
-                    scatter: {
-                        marker: {
-                            radius: 5,
-                            states: {
-                                hover: {
-                                    enabled: true,
-                                    lineColor: 'rgb(100,100,100)'
-                                }
-                            }
-                        },
-                        states: {
-                            hover: {
-                                marker: {
-                                    enabled: false
-                                }
-                            }
-                        },
-                        tooltip: {
-                            headerFormat: '<b>{series.name}, {point.name}</b><br>',
-                            pointFormat: '{point.x} PC1, {point.y} PC2'
-                        }
-                    }
-                },
-                series: data
-            });
-        };
+                yaxis: {
+                    title: 'PC2'
+                }
+            };
 
-        model().delegate.showDeviationGraph = function(data) {
-            var layout = {
+            Plotly.newPlot('clusters-chart', clustersData, clustersLayout);
+
+            var deviationLayout = {
                 height: 500,
                 width: 800,
                 showlegend: true,
@@ -78,44 +31,11 @@
                 }
             };
 
-            Plotly.newPlot('deviation-chart', data, layout);
-        };
+            Plotly.newPlot('deviation-chart', deviationData, deviationLayout);
 
-        model().delegate.showValidity = function(data) {
-            $('#validityChart').highcharts({
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: 'Silhouette'
-                },
-                xAxis: {
-                    type: 'category',
-                    labels: {
-                        rotation: -45,
-                        style: {
-                            fontSize: '13px',
-                            fontFamily: 'Verdana, sans-serif'
-                        }
-                    }
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: 'Silhouette'
-                    }
-                },
-                legend: {
-                    enabled: false
-                },
-                tooltip: {
-                    pointFormat: 'Silhouette: <b>{point.y:.1f}</b>'
-                },
-                series: [{
-                    name: 'Silhouette',
-                    data: data
-                }]
-            });
+            if (silhouetteData) {
+                Plotly.newPlot('validity-chart', silhouetteData);
+            }
         };
 
         model().init();

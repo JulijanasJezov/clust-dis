@@ -12,5 +12,6 @@ namespace Clustering.App.Api
         public int[] ClusterPropertyIds { get; set; }
         public bool CalculateSilhouette { get; set; }
         public bool IncludeAge { get; set; }
+        public int NumberOfClusters { get; set; }
     }
 }
