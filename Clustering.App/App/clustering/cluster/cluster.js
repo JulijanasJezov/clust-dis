@@ -23,36 +23,6 @@
                 };
             });
 
-            //var deviationData = _.map(clusteredData, function(cluster) {
-            //    var xs = [];
-            //    var ys = [];
-            //    var text = []
-            //    _.each(cluster.propertiesDetails, function(pd) {
-            //        xs.push(pd.standardDeviation);
-            //        ys.push(pd.averageValue);
-            //        text.push(pd.name);
-            //    });
-            //    return {
-            //        x: xs,
-            //        y: ys,
-            //        text: text,
-            //        mode: 'markers',
-            //        name: cluster.name
-            //    };
-            //});
-
-            //var deviationLayout = {
-            //    height: 500,
-            //    width: 800,
-            //    showlegend: true,
-            //    xaxis: {
-            //        title: 'Standard Deviation'
-            //    },
-            //    yaxis: {
-            //        title: 'Mean'
-            //    }
-            //};
-
             var clusterNames = _.map(clusteredData, function(cluster) {
                 return cluster.name;
             });
