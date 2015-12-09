@@ -23,23 +23,69 @@
                 };
             });
 
-            var deviationData = _.map(clusteredData, function(cluster) {
-                var xs = [];
-                var ys = [];
-                var text = []
-                _.each(cluster.propertiesDetails, function(pd) {
-                    xs.push(pd.standardDeviation);
-                    ys.push(pd.averageValue);
-                    text.push(pd.name);
-                });
+            //var deviationData = _.map(clusteredData, function(cluster) {
+            //    var xs = [];
+            //    var ys = [];
+            //    var text = []
+            //    _.each(cluster.propertiesDetails, function(pd) {
+            //        xs.push(pd.standardDeviation);
+            //        ys.push(pd.averageValue);
+            //        text.push(pd.name);
+            //    });
+            //    return {
+            //        x: xs,
+            //        y: ys,
+            //        text: text,
+            //        mode: 'markers',
+            //        name: cluster.name
+            //    };
+            //});
+
+            //var deviationLayout = {
+            //    height: 500,
+            //    width: 800,
+            //    showlegend: true,
+            //    xaxis: {
+            //        title: 'Standard Deviation'
+            //    },
+            //    yaxis: {
+            //        title: 'Mean'
+            //    }
+            //};
+
+            var clusterNames = _.map(clusteredData, function(cluster) {
+                return cluster.name;
+            });
+
+            var deviationData = _.map(_.first(clusteredData).propertiesDetails, function(pd) {
                 return {
-                    x: xs,
-                    y: ys,
-                    text: text,
-                    mode: 'markers',
-                    name: cluster.name
+                    x: clusterNames,
+                    y: [],
+                    name: pd.name,
+                    error_y: {
+                        type: "data",
+                        array: [],
+                        visible: true
+                    },
+                    type: "bar"
                 };
             });
+
+            _.map(clusteredData, function(cluster) {
+                _.each(cluster.propertiesDetails, function(pd) {
+                    var singleObject = _.findWhere(deviationData, { name: pd.name });
+                    singleObject.y.push(pd.averageValue);
+                    singleObject.error_y.array.push(pd.standardDeviation);
+                });
+            });
+
+            var deviationLayout = {
+                height: 500,
+                width: 800,
+                barmode: "group"
+            };
+
+            Plotly.newPlot('deviation-chart', deviationData, deviationLayout);
 
             var silhouetteData = null;
 
@@ -74,20 +120,6 @@
             };
 
             Plotly.newPlot('clusters-chart', clustersData, clustersLayout);
-
-            var deviationLayout = {
-                height: 500,
-                width: 800,
-                showlegend: true,
-                xaxis: {
-                    title: 'Standard Deviation'
-                },
-                yaxis: {
-                    title: 'Mean'
-                }
-            };
-
-            Plotly.newPlot('deviation-chart', deviationData, deviationLayout);
 
             if (silhouetteData) {
                 Plotly.newPlot('validity-chart', silhouetteData);
