@@ -73,6 +73,8 @@ namespace Clustering.App.Api.Controllers
 
                     var people = Db.People.ToArray();
 
+                    var propertyAssociations = new List<PersonDiseasePropertyAssociation>();
+
                     int rowCount = 0;
                     foreach (Row r in sheetData.Elements<Row>())
                     {
@@ -115,27 +117,29 @@ namespace Clustering.App.Api.Controllers
                                         break;
                                 }
                             } 
-                            else
+                            else if (c.CellValue != null)
                             {
                                 var propertyName = properties[cellPos];
                                 var diseasePropertyId = Db.DiseaseProperties.Where(s => s.Name == propertyName).Select(s => s.DiseasePropertyId).SingleOrDefault();
 
-                                double scoreDouble = double.Parse(c.CellValue.Text);
+                                double scoreDouble = scoreDouble = double.Parse(c.CellValue.Text);
 
                                 int score = (int)Math.Round(scoreDouble, MidpointRounding.AwayFromZero);
 
-                                Db.PersonDiseasePropertyAssociations.Add(new PersonDiseasePropertyAssociation {
+                                propertyAssociations.Add(new PersonDiseasePropertyAssociation {
                                     DiseasePropertyId = diseasePropertyId,
                                     PersonId = people[rowCount].PersonId,
                                     Score = score
                                 });
 
-                                Db.SaveChanges();
                             }
                         }
 
                         rowCount++;
                     }
+
+                    Db.PersonDiseasePropertyAssociations.AddRange(propertyAssociations);
+                    Db.SaveChanges();
                 }
             }
 

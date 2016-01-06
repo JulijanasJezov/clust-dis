@@ -47,7 +47,7 @@ namespace Clustering.App.Api.Controllers
                 {
                     int? score = person.PersonDiseaseProperties
                         .Where(s => s.DiseasePropertyId == property.DiseasePropertyId)
-                        .Select(s => s.Score)
+                        .Select(s => (int?)s.Score)
                         .SingleOrDefault();
 
                     if (score != null)
