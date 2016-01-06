@@ -56,6 +56,10 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -98,6 +102,7 @@
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -125,6 +130,9 @@
     <Content Include="App\diseases\listDiseases\listDiseases.html" />
     <Content Include="App\diseases\listDiseases\listDiseases.js" />
     <Content Include="App\diseases\listDiseases\listDiseasesModel.js" />
+    <Content Include="App\import\import.html" />
+    <Content Include="App\import\import.js" />
+    <Content Include="App\import\importModel.js" />
     <Content Include="App\people\addPerson\addPerson.html" />
     <Content Include="App\people\addPerson\addPerson.js" />
     <Content Include="App\people\addPerson\addPersonModel.js" />
@@ -190,6 +198,7 @@
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\knockout-3.2.0.js" />
+    <Content Include="Scripts\knockout-file-binding.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\plotly-latest.min.js" />
     <Content Include="Scripts\q.js" />
@@ -204,6 +213,7 @@
     <Compile Include="Api\Controllers\BaseController.cs" />
     <Compile Include="Api\Controllers\ClusteringController.cs" />
     <Compile Include="Api\Controllers\DiseaseController.cs" />
+    <Compile Include="Api\Controllers\ImportController.cs" />
     <Compile Include="Api\Controllers\PeopleController.cs" />
     <Compile Include="Api\Controllers\SeedController.cs" />
     <Compile Include="Api\Models\Clustering\ClusteredDataApiModel.cs" />
