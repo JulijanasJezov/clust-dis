@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Accord.Statistics.Analysis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,6 +49,46 @@ namespace Clustering.App.Api.Algorithms
             var isEmpty = clusters.Any(s => s.Count == 0) ? true : false;
 
             return isEmpty;
+        }
+
+        public static List<KMDataPoint> ComputePCA(List<KMDataPoint> normalizedDataToCluster, List<KMDataPoint> rawDataToCluster)
+        {
+            var numberOfDataPoints = normalizedDataToCluster.Count();
+            var numberOfProperties = normalizedDataToCluster.First().Properties.Count();
+            double[,] propertiesMatrix = new double[numberOfDataPoints, numberOfProperties];
+
+            for (int dataPoint = 0; dataPoint < normalizedDataToCluster.Count; dataPoint++)
+            {
+                int prop = 0;
+
+                foreach (var property in normalizedDataToCluster[dataPoint].Properties)
+                {
+                    propertiesMatrix[dataPoint, prop] = property.Value;
+                    prop++;
+                }
+
+            }
+
+            // Creates the Principal Component Analysis of the given matrix
+            var pca = new PrincipalComponentAnalysis(propertiesMatrix, AnalysisMethod.Center);
+
+            // Compute the Principal Component Analysis
+            pca.Compute();
+
+            double[,] components = pca.Transform(propertiesMatrix, 2);
+
+            var dpIndex = 0;
+            var compIndex = 0;
+
+            foreach (var dataPoint in rawDataToCluster)
+            {
+                dataPoint.xValue = components[dpIndex, compIndex];
+                dataPoint.yValue = components[dpIndex, compIndex + 1];
+
+                dpIndex++;
+            }
+
+            return rawDataToCluster;
         }
     }
 }

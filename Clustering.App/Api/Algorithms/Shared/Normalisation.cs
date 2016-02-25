@@ -6,6 +6,7 @@ namespace Clustering.App.Api.Algorithms
 {
     public static class Normalisation
     {
+        // Gaussian normalisation
         public static List<KMDataPoint> NormaliseData(List<KMDataPoint> rawData)
         {
             List<KMDataPoint> normalizedData = new List<KMDataPoint>();

@@ -1,63 +1,67 @@
-﻿define(["shared/guajax", "shared/scatterSeriesModel"], function(guajax, scatterSeriesModel) {
+﻿define(["shared/guajax"], function(guajax) {
     return function clusterModel(diseaseId) {
         var exports = this;
 
         exports.delegate = {
-            showGraph: function(data) { },
-            showValidity: function(data) { },
+            showGraphs: function(clusteredData, calculateSilhouette) { }
         }
 
+        // page data
         exports.diseaseName = ko.observable();
         exports.clusteredData = ko.observable();
         exports.diseaseProperties = ko.observable();
+        exports.silhouetteCalculated = ko.observable(false);
+
+        // data to cluster
         exports.clusterPropertyIds = ko.observableArray();
         exports.includeAge = ko.observable();
         exports.calculateSilhouette = ko.observable();
+        exports.numberOfClusters = ko.observable();
+
+        // search data
         exports.searchValue = ko.observable();
         exports.searchResults = ko.observableArray();
         exports.personSelected = ko.observable();
 
+        // validation
+        exports.numberOfClustersError = ko.observable(false);
+
+        var isValid = function() {
+            exports.numberOfClustersError(false);
+
+            if (isNaN(exports.numberOfClusters()) || exports.numberOfClusters() < 2) {
+                exports.numberOfClustersError(true);
+                return false;
+            }
+
+            return true;
+        };
+
         exports.showGraph = function() {
+            if (!isValid()) return;
+            exports.silhouetteCalculated(false);
+
             guajax.post("api/cluster", {
                 clusterDiseaseId: diseaseId,
                 clusterPropertyIds: exports.clusterPropertyIds(),
                 includeAge: exports.includeAge(),
-                calculateSilhouette: exports.calculateSilhouette()
+                calculateSilhouette: exports.calculateSilhouette(),
+                numberOfClusters: exports.numberOfClusters()
 
             })
             .then(function(response) {
                 exports.clusteredData(response.data);
 
-                var chartData = _.map(response.data, function(cluster) {
-                    var chartSerie = new scatterSeriesModel(cluster);
-                    return chartSerie;
-                });
+                if (exports.calculateSilhouette()) {
+                    exports.silhouetteCalculated(true);
+                }
 
-                exports.delegate.showGraph(chartData);
+                exports.delegate.showGraphs(exports.clusteredData(), exports.calculateSilhouette());
             });
-        };
-
-        exports.showValidity = function() {
-            function calculateAverage(dataPoints) {
-                var sum = 0;
-                var numberOfDataPoints = 0;
-                var data = _.each(dataPoints, function(dataPoint) {
-                    sum += dataPoint.silhouette;
-                    numberOfDataPoints++;
-                });
-
-                return sum / numberOfDataPoints;
-            }
-
-            var columnData = _.map(exports.clusteredData(), function(cluster) {
-                var chartSerie = [cluster.name, calculateAverage(cluster.dataPoints)];
-                return chartSerie;
-            });
-            
-            exports.delegate.showValidity(columnData);
         };
 
         exports.search = function() {
+            if (!exports.searchValue()) return;
             var results = [];
             _.each(exports.clusteredData(), function(cluster) {
                 results.push(_.filter(cluster.dataPoints, function(person) {
