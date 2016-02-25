@@ -15,7 +15,7 @@ namespace Clustering.App.Api.Algorithms
             foreach (var dataPoint in clusteredData)
             {
                 var averageDistanceSameCluster = 0.0;
-                var minAverageDistanceOtherCluster = 0.0;
+                var minAverageDistanceOtherCluster = 0;
                 var distance = 0.0;
                 var otherClusterAvgDistances = new double[clusters.Count() - 1];
                 var currentCluster = clusteredData.Where(s => s.Cluster == dataPoint.Cluster);
@@ -28,9 +28,10 @@ namespace Clustering.App.Api.Algorithms
                     }
                 }
 
+                var clusterIndex = 0;
+
                 foreach (var cluster in clusters.Where(s => s.Key != dataPoint.Cluster))
                 {
-                    var clusterIndex = 0;
                     var otherClusterDistance = 0.0;
 
                     foreach (var otherClusterDp in cluster)
@@ -48,14 +49,7 @@ namespace Clustering.App.Api.Algorithms
                 averageDistanceSameCluster = distance / currentCluster.Count();
                 minAverageDistanceOtherCluster = Helpers.MinIndex(otherClusterAvgDistances);
 
-                if (averageDistanceSameCluster >= minAverageDistanceOtherCluster)
-                {
-                    dataPoint.Silhouette = minAverageDistanceOtherCluster / averageDistanceSameCluster - 1;
-                }
-                else
-                {
-                    dataPoint.Silhouette = 1 - averageDistanceSameCluster / minAverageDistanceOtherCluster;
-                }
+                dataPoint.Silhouette = (otherClusterAvgDistances[minAverageDistanceOtherCluster] - averageDistanceSameCluster) / Math.Max(averageDistanceSameCluster, otherClusterAvgDistances[minAverageDistanceOtherCluster]);
 
                 silhouetteData.Add(dataPoint);
             }

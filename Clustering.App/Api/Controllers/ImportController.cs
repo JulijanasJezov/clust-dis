@@ -135,6 +135,8 @@ namespace Clustering.App.Api.Controllers
                             }
                         }
 
+                        if (rowCount == 2000) break; // Temporary fix for the amount of people
+
                         rowCount++;
                     }
 
