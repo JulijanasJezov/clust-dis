@@ -22,10 +22,14 @@ namespace Clustering.App.Api.Algorithms
 
                 foreach (var sameClusterDp in currentCluster)
                 {
+                    var singlePointDistance = 0.0;
+
                     foreach (var property in dataPoint.Properties)
                     {
-                        distance += Math.Abs(dataPoint.Properties[property.Key] - sameClusterDp.Properties[property.Key]);
+                        singlePointDistance += Math.Pow(dataPoint.Properties[property.Key] - sameClusterDp.Properties[property.Key], 2);
                     }
+
+                    distance += Math.Sqrt(singlePointDistance);
                 }
 
                 var clusterIndex = 0;
@@ -33,13 +37,17 @@ namespace Clustering.App.Api.Algorithms
                 foreach (var cluster in clusters.Where(s => s.Key != dataPoint.Cluster))
                 {
                     var otherClusterDistance = 0.0;
-
+                    
                     foreach (var otherClusterDp in cluster)
                     {
+                        var singlePointDistance = 0.0;
+
                         foreach (var property in dataPoint.Properties)
                         {
-                            otherClusterDistance += Math.Abs(dataPoint.Properties[property.Key] - otherClusterDp.Properties[property.Key]);
+                            singlePointDistance += Math.Pow(dataPoint.Properties[property.Key] - otherClusterDp.Properties[property.Key], 2);
                         }
+
+                        otherClusterDistance += Math.Sqrt(singlePointDistance);
                     }
 
                     otherClusterAvgDistances[clusterIndex] = otherClusterDistance / cluster.Count();
