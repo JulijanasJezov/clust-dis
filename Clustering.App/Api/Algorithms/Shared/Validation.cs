@@ -7,7 +7,7 @@ namespace Clustering.App.Api.Algorithms
 {
     public static class Validation
     {
-        public static List<KMDataPoint> CalculateSilhouette(List<KMDataPoint> clusteredData)
+        public static List<KMDataPoint> CalculateSilhouette(ref List<KMDataPoint> clusteredData)
         {
             var silhouetteData = new List<KMDataPoint>();
             var clusters = clusteredData.GroupBy(s => s.Cluster);

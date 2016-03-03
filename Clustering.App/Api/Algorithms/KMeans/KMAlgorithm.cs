@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Clustering.App.Api.Algorithms
 {
@@ -22,7 +23,7 @@ namespace Clustering.App.Api.Algorithms
                 clusters.Add(new KMDataPoint() { Cluster = i });
             }
 
-            normalizedDataToCluster = Normalisation.NormaliseData(rawDataToCluster);
+            normalizedDataToCluster = Normalisation.NormaliseData(ref rawDataToCluster);
 
             InitializeCentroids();
 
@@ -40,7 +41,7 @@ namespace Clustering.App.Api.Algorithms
 
             if (calculateSilhouette)
             {
-                var silhouetteData = Validation.CalculateSilhouette(normalizedDataToCluster);
+                var silhouetteData = Validation.CalculateSilhouette(ref normalizedDataToCluster);
 
                 for(var dp = 0; dp < silhouetteData.Count(); dp++)
                 {
@@ -48,7 +49,7 @@ namespace Clustering.App.Api.Algorithms
                 }
             }
 
-            rawDataToCluster = Helpers.ComputePCA(normalizedDataToCluster, rawDataToCluster);
+            rawDataToCluster = Helpers.ComputePCA(ref normalizedDataToCluster, ref rawDataToCluster);
 
             return rawDataToCluster;
         }
@@ -69,41 +70,39 @@ namespace Clustering.App.Api.Algorithms
 
         private bool CalculateClustersMeans()
         {
-            if (Helpers.HasEmptyCluster(normalizedDataToCluster)) return false;
+            if (Helpers.HasEmptyCluster(ref normalizedDataToCluster)) return false;
 
             var groupToComputeMeans = normalizedDataToCluster
                 .GroupBy(s => s.Cluster)
                 .OrderBy(s => s.Key);
-
-            var clusterIndex = 0;
-
-            foreach (var item in groupToComputeMeans)
-            {
-                IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
-
-                foreach (var property in normalizedDataToCluster.First().Properties)
+            
+            Parallel.ForEach(groupToComputeMeans,
+                (item, pls, clusterIndex) =>
                 {
-                    var sumOfProperty = 0.0;
+                    IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
 
-                    foreach (var value in item)
+                    foreach (var property in normalizedDataToCluster.First().Properties)
                     {
-                        sumOfProperty += value.Properties[property.Key];
+                        var sumOfProperty = 0.0;
+
+                        foreach (var value in item)
+                        {
+                            sumOfProperty += value.Properties[property.Key];
+                        }
+
+                        sumsOfProperties.Add(property.Key, sumOfProperty);
                     }
 
-                    sumsOfProperties.Add(property.Key, sumOfProperty);
-                }
+                    IDictionary<string, double> meansOfProperties = new Dictionary<string, double>();
 
-                IDictionary<string, double> meansOfProperties = new Dictionary<string, double>();
+                    foreach (var property in rawDataToCluster.First().Properties)
+                    {
+                        var mean = sumsOfProperties[property.Key] / rawDataToCluster.Count();
+                        meansOfProperties.Add(property.Key, mean);
+                    }
 
-                foreach (var property in rawDataToCluster.First().Properties)
-                {
-                    var mean = sumsOfProperties[property.Key] / rawDataToCluster.Count();
-                    meansOfProperties.Add(property.Key, mean);
-                }
-
-                clusters[clusterIndex].Properties = meansOfProperties;
-                clusterIndex++;
-            }
+                    clusters[(int)clusterIndex].Properties = meansOfProperties;
+                });
 
             return true;
         }
@@ -111,25 +110,26 @@ namespace Clustering.App.Api.Algorithms
         private bool UpdateDataPointsClusters()
         {
             var changed = false;
-
-            var distances = new double[numberOfClusters];
             
-            for (int dataPoint = 0; dataPoint < normalizedDataToCluster.Count; dataPoint++)
-            {
-                for (int clusterIndex = 0; clusterIndex < numberOfClusters; clusterIndex++)
+            Parallel.For(0, normalizedDataToCluster.Count,
+                dataPoint =>
                 {
-                    distances[clusterIndex] = Helpers.EuclideanDistance(normalizedDataToCluster[dataPoint], clusters[clusterIndex]);
-                }
+                    var distances = new double[numberOfClusters];
 
-                var closestCluster = Helpers.MinIndex(distances);
-                if (closestCluster != normalizedDataToCluster[dataPoint].Cluster)
-                {
-                    changed = true;
-                    normalizedDataToCluster[dataPoint].Cluster = rawDataToCluster[dataPoint].Cluster = closestCluster;
-                }
-            }
+                    for (int clusterIndex = 0; clusterIndex < numberOfClusters; clusterIndex++)
+                    {
+                        distances[clusterIndex] = Helpers.EuclideanDistance(normalizedDataToCluster[dataPoint], clusters[clusterIndex]);
+                    }
 
-            if (Helpers.HasEmptyCluster(normalizedDataToCluster)) return false;
+                    var closestCluster = Helpers.MinIndex(distances);
+                    if (closestCluster != normalizedDataToCluster[dataPoint].Cluster)
+                    {
+                        changed = true;
+                        normalizedDataToCluster[dataPoint].Cluster = rawDataToCluster[dataPoint].Cluster = closestCluster;
+                    }
+                });
+
+            if (Helpers.HasEmptyCluster(ref normalizedDataToCluster)) return false;
 
             return changed;
         }

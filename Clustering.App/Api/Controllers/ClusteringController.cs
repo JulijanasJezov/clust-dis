@@ -17,52 +17,61 @@ namespace Clustering.App.Api.Controllers
             {
                 return ApiBadRequest("Number of Clusters needs to be at least 2");
             }
-
-            var people = Db.People
+            var dataPoints = new List<KMDataPoint>();
+            dataPoints = Db.People
                 .Where(s => s.PersonDiseaseProperties
-                            .Where(a => a.DiseaseProperty.DiseaseId == clusterData.ClusterDiseaseId)
-                            .Any())
+                            .Where(a => clusterData.ClusterPropertyIds.Contains(a.DiseasePropertyId))
+                            .Count() == clusterData.ClusterPropertyIds.Count())
+                .ToList()
+                .Select(s => new KMDataPoint
+                {
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    Properties = s.PersonDiseaseProperties
+                            .Where(a => clusterData.ClusterPropertyIds.Contains(a.DiseasePropertyId))
+                            .Select(a => new { a.DiseaseProperty.Name, a.Score }).ToDictionary(a => a.Name, a => (double)a.Score)
+                })
                 .ToList();
 
-            var clusterProperties = Db.DiseaseProperties
-                .Where(s => clusterData.ClusterPropertyIds.Contains(s.DiseasePropertyId));
+            //var clusterProperties = Db.DiseaseProperties
+            //    .Where(s => clusterData.ClusterPropertyIds.Contains(s.DiseasePropertyId));
 
-            var clusterPropertiesCount = clusterData.IncludeAge ? clusterProperties.Count() + 1 : clusterProperties.Count();
+            //var clusterPropertiesCount = clusterData.IncludeAge ? clusterProperties.Count() + 1 : clusterProperties.Count();
 
-            var dataPoints = new List<KMDataPoint>();
+            
 
-            foreach (var person in people)
-            {
-                var properties = new Dictionary<string, double>();
+            //foreach (var person in people)
+            //{
+            //    var properties = new Dictionary<string, double>();
 
-                if (clusterData.IncludeAge)
-                {
-                    var age = DateTime.Now.Year - person.DateOfBirth.Year;
-                    if (DateTime.Now.Month < person.DateOfBirth.Month || (DateTime.Now.Month == person.DateOfBirth.Month && DateTime.Now.Day < person.DateOfBirth.Day)) age--;
+            //    if (clusterData.IncludeAge)
+            //    {
+            //        var age = DateTime.Now.Year - person.DateOfBirth.Year;
+            //        if (DateTime.Now.Month < person.DateOfBirth.Month || (DateTime.Now.Month == person.DateOfBirth.Month && DateTime.Now.Day < person.DateOfBirth.Day)) age--;
 
-                    properties.Add("Age", age);
-                }
+            //        properties.Add("Age", age);
+            //    }
 
-                foreach (var property in clusterProperties)
-                {
-                    int? score = person.PersonDiseaseProperties
-                        .Where(s => s.DiseasePropertyId == property.DiseasePropertyId)
-                        .Select(s => (int?)s.Score)
-                        .SingleOrDefault();
+            //    foreach (var property in clusterProperties)
+            //    {
+            //        int? score = person.PersonDiseaseProperties
+            //            .Where(s => s.DiseasePropertyId == property.DiseasePropertyId)
+            //            .Select(s => (int?)s.Score)
+            //            .SingleOrDefault();
 
-                    if (score != null)
-                    {
-                        properties.Add(property.Name, score.Value);
-                    }
-                }
+            //        if (score != null)
+            //        {
+            //            properties.Add(property.Name, score.Value);
+            //        }
+            //    }
 
-                // Ignore people with null properties
-                if (properties.Count() == clusterPropertiesCount)
-                {
-                    dataPoints.Add(new KMDataPoint(properties, person.FirstName, person.LastName));
-                }
+            //    // Ignore people with null properties
+            //    if (properties.Count() == clusterPropertiesCount)
+            //    {
+            //        dataPoints.Add(new KMDataPoint(properties, person.FirstName, person.LastName));
+            //    }
 
-            }
+            //}
 
             if (dataPoints.Count() <= 10)
             {
