@@ -32,9 +32,9 @@ namespace Clustering.App.Api.Algorithms
 
             while (iteration < maxIteration)
             {
-                var nothingToUpdate = !CalculateClustersMeans() || !UpdateDataPointsClusters();
+                var clustersUpdated = CalculateClustersMeans() && UpdateDataPointsClusters();
 
-                if (nothingToUpdate) break;
+                if (!clustersUpdated) break;
 
                 iteration++;
             }
