@@ -43,7 +43,7 @@ namespace Clustering.App.Api.Algorithms
             {
                 var silhouetteData = Validation.CalculateSilhouette(ref normalizedDataToCluster);
 
-                for(var dp = 0; dp < silhouetteData.Count(); dp++)
+                for (var dp = 0; dp < silhouetteData.Count(); dp++)
                 {
                     rawDataToCluster[dp].Silhouette = silhouetteData[dp].Silhouette;
                 }
@@ -53,18 +53,69 @@ namespace Clustering.App.Api.Algorithms
 
             return rawDataToCluster;
         }
-        
+
         private void InitializeCentroids()
         {
-            Random random = new Random(numberOfClusters);
-            for (int i = 0; i < numberOfClusters; ++i)
+            IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
+
+            foreach (var property in normalizedDataToCluster.First().Properties)
             {
-                normalizedDataToCluster[i].Cluster = rawDataToCluster[i].Cluster = i;
+                var sumOfProperty = 0.0;
+
+                for (var dataPoint = 0; dataPoint < normalizedDataToCluster.Count; dataPoint++)
+                {
+                    sumOfProperty += property.Value;
+                }
+
+                sumsOfProperties.Add(property.Key, sumOfProperty);
             }
 
-            for (int i = numberOfClusters; i < normalizedDataToCluster.Count; i++)
+            IDictionary<string, double> meansOfProperties = new Dictionary<string, double>();
+
+            foreach (var property in rawDataToCluster.First().Properties)
             {
-                normalizedDataToCluster[i].Cluster = rawDataToCluster[i].Cluster = random.Next(0, numberOfClusters);
+                var mean = sumsOfProperties[property.Key] / rawDataToCluster.Count();
+                meansOfProperties.Add(property.Key, mean);
+            }
+
+            var meanDataPoint = new KMDataPoint(meansOfProperties);
+
+            var distances = new double[normalizedDataToCluster.Count];
+
+            for (int dp = 0; dp < normalizedDataToCluster.Count; dp++)
+            {
+                distances[dp] = Helpers.EuclideanDistance(normalizedDataToCluster[dp], meanDataPoint);
+            }
+
+            var closestDpIndex = Helpers.MinIndex(distances);
+
+            List<KMDataPoint> currentCentroids = new List<KMDataPoint>();
+            currentCentroids.Add(normalizedDataToCluster[closestDpIndex]);
+            normalizedDataToCluster[closestDpIndex].Cluster = rawDataToCluster[closestDpIndex].Cluster = 0; // initial centroid
+
+            
+            for (int i = 1; i < numberOfClusters; i++)
+            {
+                var currentCentroidDistances = new double[normalizedDataToCluster.Count];
+
+                for (int dp = 0; dp < normalizedDataToCluster.Count; dp++)
+                {
+                    foreach(var currentCentroid in currentCentroids)
+                    {
+                        var euclideanDistance = Helpers.EuclideanDistance(normalizedDataToCluster[dp], currentCentroid);
+                        if (currentCentroid == normalizedDataToCluster[dp])
+                        {
+                            currentCentroidDistances[dp] = euclideanDistance = 0;
+                        }
+                        currentCentroidDistances[dp] += euclideanDistance;
+                    }
+                }
+
+                var furthestDpIndex = Helpers.MaxIndex(currentCentroidDistances);
+
+                currentCentroids.Add(normalizedDataToCluster[furthestDpIndex]);
+
+                normalizedDataToCluster[furthestDpIndex].Cluster = rawDataToCluster[furthestDpIndex].Cluster = i;
             }
         }
 
@@ -74,8 +125,9 @@ namespace Clustering.App.Api.Algorithms
 
             var groupToComputeMeans = normalizedDataToCluster
                 .GroupBy(s => s.Cluster)
+                .Where(s => s.Key != null)
                 .OrderBy(s => s.Key);
-            
+
             Parallel.ForEach(groupToComputeMeans,
                 (item, pls, clusterIndex) =>
                 {
@@ -110,7 +162,7 @@ namespace Clustering.App.Api.Algorithms
         private bool UpdateDataPointsClusters()
         {
             var changed = false;
-            
+
             Parallel.For(0, normalizedDataToCluster.Count,
                 dataPoint =>
                 {
