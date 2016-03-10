@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Clustering.App.Api.Algorithms
 {
@@ -6,6 +7,7 @@ namespace Clustering.App.Api.Algorithms
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public IDictionary<string, double> Properties { get; set; }
         public int? Cluster { get; set; }
         public double yValue { get; set; }

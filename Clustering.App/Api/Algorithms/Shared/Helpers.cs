@@ -51,22 +51,6 @@ namespace Clustering.App.Api.Algorithms
             return Math.Sqrt(distance);
         }
 
-        public static bool HasEmptyCluster(ref List<KMDataPoint> data)
-        {
-            var clusters = data
-                .GroupBy(s => s.Cluster)
-                .OrderBy(s => s.Key)
-                .Select(g => new
-                {
-                    Cluster = g.Key,
-                    Count = g.Count()
-                });
-
-            var isEmpty = clusters.Any(s => s.Count == 0) ? true : false;
-
-            return isEmpty;
-        }
-
         public static List<KMDataPoint> ComputePCA(ref List<KMDataPoint> normalizedDataToCluster, ref List<KMDataPoint> rawDataToCluster)
         {
             var numberOfDataPoints = normalizedDataToCluster.Count();

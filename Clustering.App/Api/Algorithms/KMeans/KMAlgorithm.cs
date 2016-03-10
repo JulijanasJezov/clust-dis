@@ -11,6 +11,7 @@ namespace Clustering.App.Api.Algorithms
         private List<KMDataPoint> normalizedDataToCluster = new List<KMDataPoint>();
         private List<KMDataPoint> clusters = new List<KMDataPoint>();
         private int numberOfClusters;
+        private int assignEmptyClustersRetries = 0;
 
         public List<KMDataPoint> ClusterData(List<KMDataPoint> dataPoints, int numOfClusters, bool calculateSilhouette = false)
         {
@@ -41,7 +42,7 @@ namespace Clustering.App.Api.Algorithms
 
             if (calculateSilhouette)
             {
-                var silhouetteData = Validation.CalculateSilhouette(ref normalizedDataToCluster);
+                var silhouetteData = Validation.CalculateSilhouette(normalizedDataToCluster);
 
                 for (var dp = 0; dp < silhouetteData.Count(); dp++)
                 {
@@ -103,7 +104,7 @@ namespace Clustering.App.Api.Algorithms
                     foreach(var currentCentroid in currentCentroids)
                     {
                         var euclideanDistance = Helpers.EuclideanDistance(normalizedDataToCluster[dp], currentCentroid);
-                        if (currentCentroid == normalizedDataToCluster[dp])
+                        if (currentCentroids.Contains(normalizedDataToCluster[dp]))
                         {
                             currentCentroidDistances[dp] = euclideanDistance = 0;
                         }
@@ -121,12 +122,24 @@ namespace Clustering.App.Api.Algorithms
 
         private bool CalculateClustersMeans()
         {
-            if (Helpers.HasEmptyCluster(ref normalizedDataToCluster)) return false;
-
             var groupToComputeMeans = normalizedDataToCluster
                 .GroupBy(s => s.Cluster)
                 .Where(s => s.Key != null)
                 .OrderBy(s => s.Key);
+
+            var clustersCount = groupToComputeMeans.Count();
+
+            if (clustersCount != numberOfClusters && assignEmptyClustersRetries < 10)
+            {
+                var numberOfClustersToAssign = numberOfClusters - groupToComputeMeans.Count();
+                AssignEmptyClusters(numberOfClustersToAssign);
+                assignEmptyClustersRetries++;
+
+                groupToComputeMeans = normalizedDataToCluster
+                .GroupBy(s => s.Cluster)
+                .Where(s => s.Key != null)
+                .OrderBy(s => s.Key);
+            };
 
             Parallel.ForEach(groupToComputeMeans,
                 (item, pls, clusterIndex) =>
@@ -149,11 +162,11 @@ namespace Clustering.App.Api.Algorithms
 
                     foreach (var property in rawDataToCluster.First().Properties)
                     {
-                        var mean = sumsOfProperties[property.Key] / rawDataToCluster.Count();
+                        var mean = sumsOfProperties[property.Key] / item.Count();
                         meansOfProperties.Add(property.Key, mean);
                     }
 
-                    clusters[(int)clusterIndex].Properties = meansOfProperties;
+                    clusters.Where(s => s.Cluster == item.Key.Value).Single().Properties = meansOfProperties;
                 });
 
             return true;
@@ -170,7 +183,10 @@ namespace Clustering.App.Api.Algorithms
 
                     for (int clusterIndex = 0; clusterIndex < numberOfClusters; clusterIndex++)
                     {
-                        distances[clusterIndex] = Helpers.EuclideanDistance(normalizedDataToCluster[dataPoint], clusters[clusterIndex]);
+                        var distance = Helpers.EuclideanDistance(normalizedDataToCluster[dataPoint], clusters[clusterIndex]);
+
+                        // avoid a centroid data point to be assigned to its own cluster consisting only of itself
+                        distances[clusterIndex] = distance != 0 ? distance : 100; 
                     }
 
                     var closestCluster = Helpers.MinIndex(distances);
@@ -181,9 +197,45 @@ namespace Clustering.App.Api.Algorithms
                     }
                 });
 
-            if (Helpers.HasEmptyCluster(ref normalizedDataToCluster)) return false;
-
             return changed;
+        }
+
+        private void AssignEmptyClusters(int numberOfClustersToAssign)
+        {
+            var groupedClusters = normalizedDataToCluster
+                .GroupBy(s => s.Cluster)
+                .Where(s => s.Key != null)
+                .OrderByDescending(s => s.Count());
+
+            for (int i = 0; i < numberOfClustersToAssign; i++)
+            {
+                var clusterNumbers = groupedClusters.Select(s => (int)s.Key).ToList();
+
+                var clusterToAssign = Enumerable.Range(0, numberOfClusters).Except(clusterNumbers).First();
+
+                var currentBiggestCluster = groupedClusters.First();
+
+                var sizeOfSelectedCluster = currentBiggestCluster.Count();
+
+                var distances = new double[sizeOfSelectedCluster];
+
+                var meanDataPoint = clusters.Where(s => s.Cluster == currentBiggestCluster.Key).Single();
+
+                var arrayOfCurrentCluster = currentBiggestCluster.ToArray();
+
+                for (int dp = 0; dp < sizeOfSelectedCluster; dp++)
+                {
+                    distances[dp] = Helpers.EuclideanDistance(arrayOfCurrentCluster[dp], meanDataPoint);
+                }
+
+                var furthestDpIndex = Helpers.MaxIndex(distances);
+
+                var newClusterDataPoint = arrayOfCurrentCluster[furthestDpIndex];
+
+                var newClusterDpIndex = normalizedDataToCluster.FindIndex(s => s == newClusterDataPoint);
+
+                normalizedDataToCluster[newClusterDpIndex].Cluster = rawDataToCluster[newClusterDpIndex].Cluster = clusterToAssign;
+            }
         }
     }
 }

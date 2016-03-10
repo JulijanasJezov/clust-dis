@@ -29,49 +29,22 @@ namespace Clustering.App.Api.Controllers
                     LastName = s.LastName,
                     Properties = s.PersonDiseaseProperties
                             .Where(a => clusterData.ClusterPropertyIds.Contains(a.DiseasePropertyId))
-                            .Select(a => new { a.DiseaseProperty.Name, a.Score }).ToDictionary(a => a.Name, a => (double)a.Score)
+                            .Select(a => new { a.DiseaseProperty.Name, a.Score }).ToDictionary(a => a.Name, a => (double)a.Score),
+                    DateOfBirth = clusterData.IncludeAge ? (DateTime?)s.DateOfBirth : null
                 })
                 .ToList();
 
-            //var clusterProperties = Db.DiseaseProperties
-            //    .Where(s => clusterData.ClusterPropertyIds.Contains(s.DiseasePropertyId));
+            if (clusterData.IncludeAge)
+            {
+                foreach (var dataPoint in dataPoints)
+                {
+                    var age = DateTime.Now.Year - dataPoint.DateOfBirth.Value.Year;
+                    if (DateTime.Now.Month < dataPoint.DateOfBirth.Value.Month 
+                        || (DateTime.Now.Month == dataPoint.DateOfBirth.Value.Month && DateTime.Now.Day < dataPoint.DateOfBirth.Value.Day)) age--;
 
-            //var clusterPropertiesCount = clusterData.IncludeAge ? clusterProperties.Count() + 1 : clusterProperties.Count();
-
-            
-
-            //foreach (var person in people)
-            //{
-            //    var properties = new Dictionary<string, double>();
-
-            //    if (clusterData.IncludeAge)
-            //    {
-            //        var age = DateTime.Now.Year - person.DateOfBirth.Year;
-            //        if (DateTime.Now.Month < person.DateOfBirth.Month || (DateTime.Now.Month == person.DateOfBirth.Month && DateTime.Now.Day < person.DateOfBirth.Day)) age--;
-
-            //        properties.Add("Age", age);
-            //    }
-
-            //    foreach (var property in clusterProperties)
-            //    {
-            //        int? score = person.PersonDiseaseProperties
-            //            .Where(s => s.DiseasePropertyId == property.DiseasePropertyId)
-            //            .Select(s => (int?)s.Score)
-            //            .SingleOrDefault();
-
-            //        if (score != null)
-            //        {
-            //            properties.Add(property.Name, score.Value);
-            //        }
-            //    }
-
-            //    // Ignore people with null properties
-            //    if (properties.Count() == clusterPropertiesCount)
-            //    {
-            //        dataPoints.Add(new KMDataPoint(properties, person.FirstName, person.LastName));
-            //    }
-
-            //}
+                    dataPoint.Properties.Add("Age", age);
+                }
+            }
 
             if (dataPoints.Count() <= 10)
             {
@@ -103,7 +76,7 @@ namespace Clustering.App.Api.Controllers
             {
                 cluster.PropertiesDetails = new List<PropertyDetails>();
 
-                foreach(var property in cluster.DataPoints.First().Properties)
+                foreach (var property in cluster.DataPoints.First().Properties)
                 {
                     var name = property.Key;
                     var min = cluster.DataPoints.Min(s => s.Properties[property.Key]);
