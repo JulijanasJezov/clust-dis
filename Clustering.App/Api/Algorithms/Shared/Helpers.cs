@@ -23,6 +23,22 @@ namespace Clustering.App.Api.Algorithms
             return indexOfMinDistance;
         }
 
+        public static int MaxIndex(double[] distances)
+        {
+            var indexOfMaxDistance = 0;
+            var maxDistance = distances[0];
+
+            for (int i = 0; i < distances.Length; ++i)
+            {
+                if (distances[i] > maxDistance)
+                {
+                    maxDistance = distances[i];
+                    indexOfMaxDistance = i;
+                }
+            }
+            return indexOfMaxDistance;
+        }
+
         public static double EuclideanDistance(KMDataPoint dataPoint, KMDataPoint mean)
         {
             var distance = 0.0;
@@ -35,7 +51,7 @@ namespace Clustering.App.Api.Algorithms
             return Math.Sqrt(distance);
         }
 
-        public static bool HasEmptyCluster(List<KMDataPoint> data)
+        public static bool HasEmptyCluster(ref List<KMDataPoint> data)
         {
             var clusters = data
                 .GroupBy(s => s.Cluster)
@@ -51,7 +67,7 @@ namespace Clustering.App.Api.Algorithms
             return isEmpty;
         }
 
-        public static List<KMDataPoint> ComputePCA(List<KMDataPoint> normalizedDataToCluster, List<KMDataPoint> rawDataToCluster)
+        public static List<KMDataPoint> ComputePCA(ref List<KMDataPoint> normalizedDataToCluster, ref List<KMDataPoint> rawDataToCluster)
         {
             var numberOfDataPoints = normalizedDataToCluster.Count();
             var numberOfProperties = normalizedDataToCluster.First().Properties.Count();

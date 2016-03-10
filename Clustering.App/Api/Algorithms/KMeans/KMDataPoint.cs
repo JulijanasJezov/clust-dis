@@ -7,7 +7,7 @@ namespace Clustering.App.Api.Algorithms
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public IDictionary<string, double> Properties { get; set; }
-        public int Cluster { get; set; }
+        public int? Cluster { get; set; }
         public double yValue { get; set; }
         public double xValue { get; set; }
         public double Mean { get; set; }
@@ -19,13 +19,13 @@ namespace Clustering.App.Api.Algorithms
             FirstName = firstName;
             LastName = lastName;
             Properties = properties;
-            Cluster = 0;
+            Cluster = null;
         }
 
         public KMDataPoint(IDictionary<string, double> properties)
         {
             Properties = properties;
-            Cluster = 0;
+            Cluster = null;
         }
 
         public KMDataPoint()
