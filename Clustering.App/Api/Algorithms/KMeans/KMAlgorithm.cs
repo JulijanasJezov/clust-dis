@@ -42,7 +42,7 @@ namespace Clustering.App.Api.Algorithms
 
             if (calculateSilhouette)
             {
-                var silhouetteData = Validation.CalculateSilhouette(ref normalizedDataToCluster);
+                var silhouetteData = Validation.CalculateSilhouette(normalizedDataToCluster);
 
                 for (var dp = 0; dp < silhouetteData.Count(); dp++)
                 {

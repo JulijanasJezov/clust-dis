@@ -48,7 +48,7 @@ namespace Clustering.Tests.Clustering
                 new KMDataPoint(normalisedProp2)
             };
 
-            var actual = Normalisation.NormaliseData(list);
+            var actual = Normalisation.NormaliseData(ref list);
 
             Assert.AreEqual(0.125, actual[0].Properties["prop1"]);
             Assert.AreEqual(0.25, actual[0].Properties["prop2"]);
