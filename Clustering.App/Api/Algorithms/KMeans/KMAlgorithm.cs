@@ -28,7 +28,7 @@ namespace Clustering.App.Api.Algorithms
 
             InitializeCentroids();
 
-            var maxIteration = dataPoints.Count * 10;
+            var maxIteration = dataPoints.Count;
             var iteration = 0;
 
             while (iteration < maxIteration)
@@ -39,7 +39,7 @@ namespace Clustering.App.Api.Algorithms
 
                 iteration++;
             }
-
+            Validation.CalculatePurity(rawDataToCluster);
             if (calculateSilhouette)
             {
                 var silhouetteData = Validation.CalculateSilhouette(normalizedDataToCluster);
@@ -142,7 +142,7 @@ namespace Clustering.App.Api.Algorithms
             };
 
             Parallel.ForEach(groupToComputeMeans,
-                (item, pls, clusterIndex) =>
+                item =>
                 {
                     IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
 
