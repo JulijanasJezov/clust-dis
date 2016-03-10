@@ -39,7 +39,7 @@ namespace Clustering.App.Api.Algorithms
 
                 iteration++;
             }
-            Validation.CalculatePurity(rawDataToCluster);
+
             if (calculateSilhouette)
             {
                 var silhouetteData = Validation.CalculateSilhouette(normalizedDataToCluster);
