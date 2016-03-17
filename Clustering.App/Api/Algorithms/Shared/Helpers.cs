@@ -51,6 +51,38 @@ namespace Clustering.App.Api.Algorithms
             return Math.Sqrt(distance);
         }
 
+        public static IDictionary<string, double> CalculatePropertiesSum(ref List<KMDataPoint> data, IDictionary<string, double> properties)
+        {
+            IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
+
+            foreach (var property in properties)
+            {
+                var sumOfProperty = 0.0;
+
+                foreach (var dataPoint in data)
+                {
+                    sumOfProperty += dataPoint.Properties[property.Key];
+                }
+
+                sumsOfProperties.Add(property.Key, sumOfProperty);
+            }
+
+            return sumsOfProperties;
+        }
+
+        public static IDictionary<string, double> CalculatePropertiesMeans(IDictionary<string, double> propertiesSum, int total)
+        {
+            IDictionary<string, double> meansOfProperties = new Dictionary<string, double>();
+
+            foreach (var property in propertiesSum)
+            {
+                var mean = property.Value / total;
+                meansOfProperties.Add(property.Key, mean);
+            }
+
+            return meansOfProperties;
+        }
+
         public static List<KMDataPoint> ComputePCA(ref List<KMDataPoint> normalizedDataToCluster, ref List<KMDataPoint> rawDataToCluster)
         {
             var numberOfDataPoints = normalizedDataToCluster.Count();

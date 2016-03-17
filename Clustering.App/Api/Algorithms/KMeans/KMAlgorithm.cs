@@ -57,27 +57,9 @@ namespace Clustering.App.Api.Algorithms
 
         private void InitializeCentroids()
         {
-            IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
+            IDictionary<string, double> sumsOfProperties = Helpers.CalculatePropertiesSum(ref normalizedDataToCluster, normalizedDataToCluster.First().Properties);
 
-            foreach (var property in normalizedDataToCluster.First().Properties)
-            {
-                var sumOfProperty = 0.0;
-
-                for (var dataPoint = 0; dataPoint < normalizedDataToCluster.Count; dataPoint++)
-                {
-                    sumOfProperty += property.Value;
-                }
-
-                sumsOfProperties.Add(property.Key, sumOfProperty);
-            }
-
-            IDictionary<string, double> meansOfProperties = new Dictionary<string, double>();
-
-            foreach (var property in rawDataToCluster.First().Properties)
-            {
-                var mean = sumsOfProperties[property.Key] / rawDataToCluster.Count();
-                meansOfProperties.Add(property.Key, mean);
-            }
+            IDictionary<string, double> meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, normalizedDataToCluster.Count);
 
             var meanDataPoint = new KMDataPoint(meansOfProperties);
 
@@ -92,9 +74,11 @@ namespace Clustering.App.Api.Algorithms
 
             List<KMDataPoint> currentCentroids = new List<KMDataPoint>();
             currentCentroids.Add(normalizedDataToCluster[closestDpIndex]);
-            normalizedDataToCluster[closestDpIndex].Cluster = rawDataToCluster[closestDpIndex].Cluster = 0; // initial centroid
 
-            
+            // first initial centroid closest to the means of all properties
+            normalizedDataToCluster[closestDpIndex].Cluster = rawDataToCluster[closestDpIndex].Cluster = 0;
+
+            // assign initial centroids for all clusters
             for (int i = 1; i < numberOfClusters; i++)
             {
                 var currentCentroidDistances = new double[normalizedDataToCluster.Count];
@@ -104,6 +88,8 @@ namespace Clustering.App.Api.Algorithms
                     foreach(var currentCentroid in currentCentroids)
                     {
                         var euclideanDistance = Helpers.EuclideanDistance(normalizedDataToCluster[dp], currentCentroid);
+
+                        // prevent same data point being assigned to multiple initial clusters
                         if (currentCentroids.Contains(normalizedDataToCluster[dp]))
                         {
                             currentCentroidDistances[dp] = euclideanDistance = 0;
