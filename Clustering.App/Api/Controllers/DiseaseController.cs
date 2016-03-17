@@ -10,6 +10,9 @@ namespace Clustering.App.Api.Controllers
     [RoutePrefix("api/diseases")]
     public class DiseaseController : BaseController
     {
+        /// <summary>
+        /// Returns the list of diseases
+        /// </summary>
         [Route("")]
         public IHttpActionResult GetDiseases(
             int pageNumber = 1,
@@ -51,6 +54,9 @@ namespace Clustering.App.Api.Controllers
             return ApiOk(pagedModel);
         }
 
+        /// <summary>
+        /// Creates a new disease
+        /// </summary>
         [Route("")]
         public IHttpActionResult PostDisease(PostDiseaseApiModel newDisease)
         {
@@ -89,6 +95,9 @@ namespace Clustering.App.Api.Controllers
             return ApiOk();
         }
 
+        /// <summary>
+        /// Updates an existing disease
+        /// </summary>
         [Route("{diseaseId}")]
         public IHttpActionResult PatchDisease(int diseaseId, PostDiseaseApiModel updateDisease)
         {
@@ -154,6 +163,9 @@ namespace Clustering.App.Api.Controllers
             return ApiOk();
         }
 
+        /// <summary>
+        /// Returns a list of of disease properties
+        /// </summary>
         [Route("{diseaseId}/properties")]
         public IHttpActionResult GetDiseaseProperties(int diseaseId)
         {
@@ -168,6 +180,9 @@ namespace Clustering.App.Api.Controllers
             return ApiOk(diseaseProperties);
         }
 
+        /// <summary>
+        /// Returns a single disease
+        /// </summary>
         [Route("{diseaseId}")]
         public IHttpActionResult GetDisease(int diseaseId)
         {
@@ -200,6 +215,9 @@ namespace Clustering.App.Api.Controllers
             });
         }
 
+        /// <summary>
+        /// Removes an existing disease
+        /// </summary>
         [Route("{diseaseId}")]
         public IHttpActionResult DeleteDisease(int diseaseId)
         {

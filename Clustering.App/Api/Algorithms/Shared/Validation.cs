@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Clustering.App.Api.Algorithms
 {
     public static class Validation
     {
+        /// <summary>
+        /// Returns the list of clustered data containing the Silhouette value for each data point
+        /// </summary>
         public static List<KMDataPoint> CalculateSilhouette(List<KMDataPoint> clusteredData)
         {
             var clusters = clusteredData.GroupBy(s => s.Cluster);

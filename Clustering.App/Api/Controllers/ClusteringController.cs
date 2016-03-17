@@ -1,5 +1,4 @@
 ﻿using Clustering.App.Api.Algorithms;
-using Clustering.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,9 @@ namespace Clustering.App.Api.Controllers
     [RoutePrefix("api/cluster")]
     public class ClusteringController : BaseController
     {
+        /// <summary>
+        /// Returns the specified amount of clusters of clustered data for specified disease
+        /// </summary>
         [Route("")]
         public IHttpActionResult PostClusterData(PostClusterApiModel clusterData)
         {
@@ -71,6 +73,9 @@ namespace Clustering.App.Api.Controllers
             return ApiOk(clusteredData);
         }
 
+        /// <summary>
+        /// Returns the additional data for individual clusters
+        /// </summary>
         private List<ClusteredDataApiModel> CalculatePropertiesRange(List<ClusteredDataApiModel> clusters)
         {
             foreach (var cluster in clusters)

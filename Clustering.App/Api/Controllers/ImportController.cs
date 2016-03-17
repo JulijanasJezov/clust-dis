@@ -1,9 +1,7 @@
 ﻿using Clustering.Model;
-using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -13,6 +11,9 @@ using System.Web.Http;
 
 namespace Clustering.App.Api.Controllers
 {
+    /// <summary>
+    /// Imports the data from .csv or .xml files consisting of disease properties and its scores attaching them to existing people
+    /// </summary>
     [RoutePrefix("api/import")]
     public class ImportController : BaseController
     {
@@ -135,7 +136,7 @@ namespace Clustering.App.Api.Controllers
                             }
                         }
 
-                        if (rowCount == 2000) break; // Temporary fix for the amount of people
+                        if (rowCount >= people.Count() - 1) break;
 
                         rowCount++;
                     }

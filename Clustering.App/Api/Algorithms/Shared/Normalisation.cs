@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Clustering.App.Api.Algorithms
 {
     public static class Normalisation
     {
-        // Data standardization
+        /// <summary>
+        /// Returns a list of standartised data
+        /// </summary>
         public static List<KMDataPoint> NormaliseData(ref List<KMDataPoint> rawData)
         {
-            List<KMDataPoint> normalizedData = new List<KMDataPoint>();
+            var normalizedData = new List<KMDataPoint>();
 
             var sumsOfProperties = Helpers.CalculatePropertiesSum(rawData, rawData.First().Properties);
 
