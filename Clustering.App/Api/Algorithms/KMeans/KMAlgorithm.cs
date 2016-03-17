@@ -131,9 +131,9 @@ namespace Clustering.App.Api.Algorithms
             Parallel.ForEach(groupToComputeMeans,
                 item =>
                 {
-                    IDictionary<string, double> sumsOfProperties = Helpers.CalculatePropertiesSum(item.ToList(), normalizedDataToCluster.First().Properties);
+                    var sumsOfProperties = Helpers.CalculatePropertiesSum(item.ToList(), normalizedDataToCluster.First().Properties);
 
-                    IDictionary<string, double> meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, item.Count());
+                    var meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, item.Count());
 
                     clusters.Where(s => s.Cluster == item.Key.Value).Single().Properties = meansOfProperties;
                 });

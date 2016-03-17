@@ -17,8 +17,8 @@ namespace Clustering.App.Api.Controllers
             {
                 return ApiBadRequest("Number of Clusters needs to be at least 2");
             }
-            var dataPoints = new List<KMDataPoint>();
-            dataPoints = Db.People
+            
+            var dataPoints = Db.People
                 .Where(s => s.PersonDiseaseProperties
                             .Where(a => clusterData.ClusterPropertyIds.Contains(a.DiseasePropertyId))
                             .Count() == clusterData.ClusterPropertyIds.Count())
@@ -34,6 +34,7 @@ namespace Clustering.App.Api.Controllers
                 })
                 .ToList();
 
+            // Calculate the age of each person
             if (clusterData.IncludeAge)
             {
                 foreach (var dataPoint in dataPoints)
@@ -46,7 +47,7 @@ namespace Clustering.App.Api.Controllers
                 }
             }
 
-            if (dataPoints.Count() <= 10)
+            if (dataPoints.Count <= 10)
             {
                 return ApiBadRequest("Not enough data to cluster");
             }
@@ -76,30 +77,25 @@ namespace Clustering.App.Api.Controllers
             {
                 cluster.PropertiesDetails = new List<PropertyDetails>();
 
+                var properties = cluster.DataPoints.First().Properties;
+
+                var sumOfProperties = Helpers.CalculatePropertiesSum(cluster.DataPoints, properties);
+                var meansOfProperties = Helpers.CalculatePropertiesMeans(sumOfProperties, cluster.DataPoints.Count());
+                var standardDeviationOfProperties = Helpers.CalculateStandardDeviation(cluster.DataPoints, meansOfProperties);
+
                 foreach (var property in cluster.DataPoints.First().Properties)
                 {
                     var name = property.Key;
                     var min = cluster.DataPoints.Min(s => s.Properties[property.Key]);
                     var max = cluster.DataPoints.Max(s => s.Properties[property.Key]);
-                    var avg = cluster.DataPoints.Sum(s => s.Properties[property.Key]) / cluster.DataPoints.Count();
-
-                    double stdDev = 0;
-
-                    for (int dataPoint = 0; dataPoint < cluster.DataPoints.Count(); dataPoint++)
-                    {
-                        var eachDev = cluster.DataPoints[dataPoint].Properties[property.Key] - avg;
-                        stdDev += Math.Pow(eachDev, 2);
-                    }
-
-                    var standarDeviation = Math.Sqrt(stdDev / cluster.DataPoints.Count());
 
                     var propertyRange = new PropertyDetails
                     {
                         Name = name,
                         MinValue = min,
                         MaxValue = max,
-                        AverageValue = Math.Ceiling(avg * 100) / 100,    // Round up to .00
-                        StandardDeviation = Math.Ceiling(standarDeviation * 100) / 100
+                        AverageValue = Math.Ceiling(meansOfProperties[property.Key] * 100) / 100,    // Round up to .00
+                        StandardDeviation = Math.Ceiling(standardDeviationOfProperties[property.Key] * 100) / 100
                     };
 
                     cluster.PropertiesDetails.Add(propertyRange);
