@@ -51,6 +51,65 @@ namespace Clustering.App.Api.Algorithms
             return Math.Sqrt(distance);
         }
 
+        public static IDictionary<string, double> CalculatePropertiesSum(List<KMDataPoint> data, IDictionary<string, double> properties)
+        {
+            var sumsOfProperties = new Dictionary<string, double>();
+
+            foreach (var property in properties)
+            {
+                var sumOfProperty = 0.0;
+
+                foreach (var dataPoint in data)
+                {
+                    sumOfProperty += dataPoint.Properties[property.Key];
+                }
+
+                sumsOfProperties.Add(property.Key, sumOfProperty);
+            }
+
+            return sumsOfProperties;
+        }
+
+        public static IDictionary<string, double> CalculatePropertiesMeans(IDictionary<string, double> propertiesSum, int total)
+        {
+            var meansOfProperties = new Dictionary<string, double>();
+
+            foreach (var property in propertiesSum)
+            {
+                var mean = property.Value / total;
+                meansOfProperties.Add(property.Key, mean);
+            }
+
+            return meansOfProperties;
+        }
+
+        public static IDictionary<string, double> CalculateStandardDeviation(List<KMDataPoint> data, IDictionary<string, double> propertiesMeans)
+        {
+            var sumsPowOfProperties = new Dictionary<string, double>();
+
+            foreach (var property in propertiesMeans)
+            {
+                var sumPowOfProperty = 0.0;
+
+                foreach (var dataPoint in data)
+                {
+                    sumPowOfProperty += Math.Pow(dataPoint.Properties[property.Key] - propertiesMeans[property.Key], 2);
+                }
+
+                sumsPowOfProperties.Add(property.Key, sumPowOfProperty);
+            }
+
+            var sdOfProperties = new Dictionary<string, double>();
+
+            foreach (var property in propertiesMeans)
+            {
+                var sd = Math.Sqrt(sumsPowOfProperties[property.Key] / data.Count);
+                sdOfProperties.Add(property.Key, sd);
+            }
+
+            return sdOfProperties;
+        }
+
         public static List<KMDataPoint> ComputePCA(ref List<KMDataPoint> normalizedDataToCluster, ref List<KMDataPoint> rawDataToCluster)
         {
             var numberOfDataPoints = normalizedDataToCluster.Count();

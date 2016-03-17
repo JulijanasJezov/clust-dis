@@ -28,7 +28,7 @@ namespace Clustering.App.Api.Algorithms
 
             InitializeCentroids();
 
-            var maxIteration = dataPoints.Count * 10;
+            var maxIteration = dataPoints.Count;
             var iteration = 0;
 
             while (iteration < maxIteration)
@@ -57,27 +57,9 @@ namespace Clustering.App.Api.Algorithms
 
         private void InitializeCentroids()
         {
-            IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
+            IDictionary<string, double> sumsOfProperties = Helpers.CalculatePropertiesSum(normalizedDataToCluster, normalizedDataToCluster.First().Properties);
 
-            foreach (var property in normalizedDataToCluster.First().Properties)
-            {
-                var sumOfProperty = 0.0;
-
-                for (var dataPoint = 0; dataPoint < normalizedDataToCluster.Count; dataPoint++)
-                {
-                    sumOfProperty += property.Value;
-                }
-
-                sumsOfProperties.Add(property.Key, sumOfProperty);
-            }
-
-            IDictionary<string, double> meansOfProperties = new Dictionary<string, double>();
-
-            foreach (var property in rawDataToCluster.First().Properties)
-            {
-                var mean = sumsOfProperties[property.Key] / rawDataToCluster.Count();
-                meansOfProperties.Add(property.Key, mean);
-            }
+            IDictionary<string, double> meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, normalizedDataToCluster.Count);
 
             var meanDataPoint = new KMDataPoint(meansOfProperties);
 
@@ -92,9 +74,11 @@ namespace Clustering.App.Api.Algorithms
 
             List<KMDataPoint> currentCentroids = new List<KMDataPoint>();
             currentCentroids.Add(normalizedDataToCluster[closestDpIndex]);
-            normalizedDataToCluster[closestDpIndex].Cluster = rawDataToCluster[closestDpIndex].Cluster = 0; // initial centroid
 
-            
+            // First initial centroid closest to the means of all properties
+            normalizedDataToCluster[closestDpIndex].Cluster = rawDataToCluster[closestDpIndex].Cluster = 0;
+
+            // Assign initial centroids for all clusters
             for (int i = 1; i < numberOfClusters; i++)
             {
                 var currentCentroidDistances = new double[normalizedDataToCluster.Count];
@@ -104,6 +88,8 @@ namespace Clustering.App.Api.Algorithms
                     foreach(var currentCentroid in currentCentroids)
                     {
                         var euclideanDistance = Helpers.EuclideanDistance(normalizedDataToCluster[dp], currentCentroid);
+
+                        // Prevent same data point being assigned to multiple initial clusters
                         if (currentCentroids.Contains(normalizedDataToCluster[dp]))
                         {
                             currentCentroidDistances[dp] = euclideanDistance = 0;
@@ -129,6 +115,7 @@ namespace Clustering.App.Api.Algorithms
 
             var clustersCount = groupToComputeMeans.Count();
 
+            // Recreate a cluster if there's empty one
             if (clustersCount != numberOfClusters && assignEmptyClustersRetries < 10)
             {
                 var numberOfClustersToAssign = numberOfClusters - groupToComputeMeans.Count();
@@ -142,29 +129,11 @@ namespace Clustering.App.Api.Algorithms
             };
 
             Parallel.ForEach(groupToComputeMeans,
-                (item, pls, clusterIndex) =>
+                item =>
                 {
-                    IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
+                    var sumsOfProperties = Helpers.CalculatePropertiesSum(item.ToList(), normalizedDataToCluster.First().Properties);
 
-                    foreach (var property in normalizedDataToCluster.First().Properties)
-                    {
-                        var sumOfProperty = 0.0;
-
-                        foreach (var value in item)
-                        {
-                            sumOfProperty += value.Properties[property.Key];
-                        }
-
-                        sumsOfProperties.Add(property.Key, sumOfProperty);
-                    }
-
-                    IDictionary<string, double> meansOfProperties = new Dictionary<string, double>();
-
-                    foreach (var property in rawDataToCluster.First().Properties)
-                    {
-                        var mean = sumsOfProperties[property.Key] / item.Count();
-                        meansOfProperties.Add(property.Key, mean);
-                    }
+                    var meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, item.Count());
 
                     clusters.Where(s => s.Cluster == item.Key.Value).Single().Properties = meansOfProperties;
                 });
