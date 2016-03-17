@@ -11,7 +11,7 @@ namespace Clustering.App.Api.Algorithms
         {
             List<KMDataPoint> normalizedData = new List<KMDataPoint>();
 
-            IDictionary<string, double> sumsOfProperties = Helpers.CalculatePropertiesSum(ref rawData, rawData.First().Properties);
+            IDictionary<string, double> sumsOfProperties = Helpers.CalculatePropertiesSum(rawData, rawData.First().Properties);
 
             IDictionary<string, double> meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, rawData.Count);
 

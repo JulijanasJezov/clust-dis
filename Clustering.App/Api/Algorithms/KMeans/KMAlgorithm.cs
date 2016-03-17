@@ -57,7 +57,7 @@ namespace Clustering.App.Api.Algorithms
 
         private void InitializeCentroids()
         {
-            IDictionary<string, double> sumsOfProperties = Helpers.CalculatePropertiesSum(ref normalizedDataToCluster, normalizedDataToCluster.First().Properties);
+            IDictionary<string, double> sumsOfProperties = Helpers.CalculatePropertiesSum(normalizedDataToCluster, normalizedDataToCluster.First().Properties);
 
             IDictionary<string, double> meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, normalizedDataToCluster.Count);
 
@@ -75,10 +75,10 @@ namespace Clustering.App.Api.Algorithms
             List<KMDataPoint> currentCentroids = new List<KMDataPoint>();
             currentCentroids.Add(normalizedDataToCluster[closestDpIndex]);
 
-            // first initial centroid closest to the means of all properties
+            // First initial centroid closest to the means of all properties
             normalizedDataToCluster[closestDpIndex].Cluster = rawDataToCluster[closestDpIndex].Cluster = 0;
 
-            // assign initial centroids for all clusters
+            // Assign initial centroids for all clusters
             for (int i = 1; i < numberOfClusters; i++)
             {
                 var currentCentroidDistances = new double[normalizedDataToCluster.Count];
@@ -89,7 +89,7 @@ namespace Clustering.App.Api.Algorithms
                     {
                         var euclideanDistance = Helpers.EuclideanDistance(normalizedDataToCluster[dp], currentCentroid);
 
-                        // prevent same data point being assigned to multiple initial clusters
+                        // Prevent same data point being assigned to multiple initial clusters
                         if (currentCentroids.Contains(normalizedDataToCluster[dp]))
                         {
                             currentCentroidDistances[dp] = euclideanDistance = 0;
@@ -115,6 +115,7 @@ namespace Clustering.App.Api.Algorithms
 
             var clustersCount = groupToComputeMeans.Count();
 
+            // Recreate a cluster if there's empty one
             if (clustersCount != numberOfClusters && assignEmptyClustersRetries < 10)
             {
                 var numberOfClustersToAssign = numberOfClusters - groupToComputeMeans.Count();
@@ -130,27 +131,9 @@ namespace Clustering.App.Api.Algorithms
             Parallel.ForEach(groupToComputeMeans,
                 item =>
                 {
-                    IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
+                    IDictionary<string, double> sumsOfProperties = Helpers.CalculatePropertiesSum(item.ToList(), normalizedDataToCluster.First().Properties);
 
-                    foreach (var property in normalizedDataToCluster.First().Properties)
-                    {
-                        var sumOfProperty = 0.0;
-
-                        foreach (var value in item)
-                        {
-                            sumOfProperty += value.Properties[property.Key];
-                        }
-
-                        sumsOfProperties.Add(property.Key, sumOfProperty);
-                    }
-
-                    IDictionary<string, double> meansOfProperties = new Dictionary<string, double>();
-
-                    foreach (var property in rawDataToCluster.First().Properties)
-                    {
-                        var mean = sumsOfProperties[property.Key] / item.Count();
-                        meansOfProperties.Add(property.Key, mean);
-                    }
+                    IDictionary<string, double> meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, item.Count());
 
                     clusters.Where(s => s.Cluster == item.Key.Value).Single().Properties = meansOfProperties;
                 });

@@ -51,7 +51,7 @@ namespace Clustering.App.Api.Algorithms
             return Math.Sqrt(distance);
         }
 
-        public static IDictionary<string, double> CalculatePropertiesSum(ref List<KMDataPoint> data, IDictionary<string, double> properties)
+        public static IDictionary<string, double> CalculatePropertiesSum(List<KMDataPoint> data, IDictionary<string, double> properties)
         {
             IDictionary<string, double> sumsOfProperties = new Dictionary<string, double>();
 
