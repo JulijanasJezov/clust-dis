@@ -9,9 +9,9 @@ namespace Clustering.Tests.Clustering
     public class StandardisationTest
     {
         [TestMethod]
-        public void TestNormalisation()
+        public void TestStandardisation()
         {
-            // Gaussian normalisation = (propertyValue - propertyMean) / propertyStandardDeviation
+            // Standardisation = (propertyValue - propertyMean) / propertyStandardDeviation
 
             var properties = new Dictionary<string, double>();
 
