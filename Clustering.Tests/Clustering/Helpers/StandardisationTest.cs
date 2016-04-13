@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Clustering.Tests.Clustering
 {
     [TestClass]
-    public class NormalisationTest
+    public class StandardisationTest
     {
         [TestMethod]
         public void TestNormalisation()
@@ -32,23 +32,23 @@ namespace Clustering.Tests.Clustering
             list.Add(datapoint);
             list.Add(datapoint1);
 
-            var normalisedProp = new Dictionary<string, double>();
+            var standardisedProp = new Dictionary<string, double>();
 
-            normalisedProp.Add("prop1", 0.125);
-            normalisedProp.Add("prop2", 0.25);
+            standardisedProp.Add("prop1", 0.125);
+            standardisedProp.Add("prop2", 0.25);
 
-            var normalisedProp2 = new Dictionary<string, double>();
+            var standardisedProp2 = new Dictionary<string, double>();
 
-            normalisedProp2.Add("prop1", -0.125);
-            normalisedProp2.Add("prop2", -0.25);
+            standardisedProp2.Add("prop1", -0.125);
+            standardisedProp2.Add("prop2", -0.25);
 
             var expected = new List<KMDataPoint>
             {
-                new KMDataPoint(normalisedProp),
-                new KMDataPoint(normalisedProp2)
+                new KMDataPoint(standardisedProp),
+                new KMDataPoint(standardisedProp2)
             };
 
-            var actual = Normalisation.NormaliseData(ref list);
+            var actual = Standardisation.StandardiseData(ref list);
 
             Assert.AreEqual(0.125, actual[0].Properties["prop1"]);
             Assert.AreEqual(0.25, actual[0].Properties["prop2"]);
