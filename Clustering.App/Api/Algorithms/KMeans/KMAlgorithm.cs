@@ -68,6 +68,7 @@ namespace Clustering.App.Api.Algorithms
             var farthestDistanceOfTwo = 0.0;
             var twoFarthestDatapoints = new int[2];
 
+            // Find the two data point with the highest Euclidean distance
             for (int dp1 = 0; dp1 < standardisedDataToCluster.Count; dp1++)
             {
                 for (int dp2 = dp1 + 1; dp2 < standardisedDataToCluster.Count; dp2++)
@@ -91,7 +92,7 @@ namespace Clustering.App.Api.Algorithms
             standardisedDataToCluster[twoFarthestDatapoints[0]].Cluster = rawDataToCluster[twoFarthestDatapoints[0]].Cluster = 0;
             standardisedDataToCluster[twoFarthestDatapoints[1]].Cluster = rawDataToCluster[twoFarthestDatapoints[1]].Cluster = 1;
 
-            // Assign initial centroids for all clusters
+            // Assign initial centroids for all remaining clusters
             for (int i = 2; i < numberOfClusters; i++)
             {
                 var currentCentroidDistances = new double[standardisedDataToCluster.Count];

@@ -34,13 +34,13 @@ namespace Clustering.Tests.Clustering
 
             var standardisedProp = new Dictionary<string, double>();
 
-            standardisedProp.Add("prop1", 0.125);
-            standardisedProp.Add("prop2", 0.25);
+            standardisedProp.Add("prop1", 1);
+            standardisedProp.Add("prop2", 1);
 
             var standardisedProp2 = new Dictionary<string, double>();
 
-            standardisedProp2.Add("prop1", -0.125);
-            standardisedProp2.Add("prop2", -0.25);
+            standardisedProp2.Add("prop1", -1);
+            standardisedProp2.Add("prop2", -1);
 
             var expected = new List<KMDataPoint>
             {
@@ -50,10 +50,10 @@ namespace Clustering.Tests.Clustering
 
             var actual = Standardisation.StandardiseData(ref list);
 
-            Assert.AreEqual(0.125, actual[0].Properties["prop1"]);
-            Assert.AreEqual(0.25, actual[0].Properties["prop2"]);
-            Assert.AreEqual(-0.125, actual[1].Properties["prop1"]);
-            Assert.AreEqual(-0.25, actual[1].Properties["prop2"]);
+            Assert.AreEqual(expected[0].Properties["prop1"], actual[0].Properties["prop1"]);
+            Assert.AreEqual(expected[0].Properties["prop2"], actual[0].Properties["prop2"]);
+            Assert.AreEqual(expected[1].Properties["prop1"], actual[1].Properties["prop1"]);
+            Assert.AreEqual(expected[1].Properties["prop2"], actual[1].Properties["prop2"]);
         }
     }
 }
