@@ -70,7 +70,7 @@ namespace Clustering.App.Api.Algorithms
 
             for (int dp1 = 0; dp1 < standardisedDataToCluster.Count; dp1++)
             {
-                for (int dp2 = 1; dp2 < standardisedDataToCluster.Count; dp2++)
+                for (int dp2 = dp1 + 1; dp2 < standardisedDataToCluster.Count; dp2++)
                 {
                     var euclideanDistance = Helpers.EuclideanDistance(standardisedDataToCluster[dp1], standardisedDataToCluster[dp2]);
 
