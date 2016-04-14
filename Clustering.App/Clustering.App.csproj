@@ -210,6 +210,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\Algorithms\Shared\Standardisation.cs" />
     <Compile Include="Api\Controllers\BaseController.cs" />
     <Compile Include="Api\Controllers\ClusteringController.cs" />
     <Compile Include="Api\Controllers\DiseaseController.cs" />
@@ -227,7 +228,6 @@
     <Compile Include="Api\Algorithms\KMeans\KMAlgorithm.cs" />
     <Compile Include="Api\Algorithms\KMeans\KMDataPoint.cs" />
     <Compile Include="Api\Algorithms\Shared\Helpers.cs" />
-    <Compile Include="Api\Algorithms\Shared\Normalisation.cs" />
     <Compile Include="Api\Algorithms\Shared\Validation.cs" />
     <Compile Include="Api\Shared\ApiResults\ApiBadRequestResult.cs" />
     <Compile Include="Api\Shared\ApiResults\ApiNotFoundResult.cs" />
