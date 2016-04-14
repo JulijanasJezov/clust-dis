@@ -3,14 +3,14 @@ using System.Linq;
 
 namespace Clustering.App.Api.Algorithms
 {
-    public static class Normalisation
+    public static class Standardisation
     {
         /// <summary>
         /// Returns a list of standartised data
         /// </summary>
-        public static List<KMDataPoint> NormaliseData(ref List<KMDataPoint> rawData)
+        public static List<KMDataPoint> StandardiseData(ref List<KMDataPoint> rawData)
         {
-            var normalizedData = new List<KMDataPoint>();
+            var standardisedData = new List<KMDataPoint>();
 
             var sumsOfProperties = Helpers.CalculatePropertiesSum(rawData, rawData.First().Properties);
 
@@ -26,10 +26,10 @@ namespace Clustering.App.Api.Algorithms
                     properties.Add(property.Key, (dataPoint.Properties[property.Key] - meansOfProperties[property.Key]) / sdOfProperties[property.Key]);
                 }
 
-                normalizedData.Add(new KMDataPoint(properties));
+                standardisedData.Add(new KMDataPoint(properties));
             }
 
-            return normalizedData;
+            return standardisedData;
         }
     }
 }
