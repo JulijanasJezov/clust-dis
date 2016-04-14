@@ -87,7 +87,7 @@ namespace Clustering.App.Api.Algorithms
             currentCentroids.Add(standardisedDataToCluster[twoFarthestDatapoints[0]]);
             currentCentroids.Add(standardisedDataToCluster[twoFarthestDatapoints[1]]);
 
-            // First initial centroid closest to the means of all properties
+            // First initial centroids with the highest distance between the two
             standardisedDataToCluster[twoFarthestDatapoints[0]].Cluster = rawDataToCluster[twoFarthestDatapoints[0]].Cluster = 0;
             standardisedDataToCluster[twoFarthestDatapoints[1]].Cluster = rawDataToCluster[twoFarthestDatapoints[1]].Cluster = 1;
 
