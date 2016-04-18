@@ -7,6 +7,9 @@ namespace Clustering.App.Api.Algorithms
 {
     public static class Helpers
     {
+        /// <summary>
+        /// Returns the index of a smallest value in the array
+        /// </summary>
         public static int MinIndex(double[] distances)
         {
             var indexOfMinDistance = 0;
@@ -23,6 +26,9 @@ namespace Clustering.App.Api.Algorithms
             return indexOfMinDistance;
         }
 
+        /// <summary>
+        /// Returns the index of a largest value in the array
+        /// </summary>
         public static int MaxIndex(double[] distances)
         {
             var indexOfMaxDistance = 0;
@@ -39,18 +45,24 @@ namespace Clustering.App.Api.Algorithms
             return indexOfMaxDistance;
         }
 
-        public static double EuclideanDistance(KMDataPoint dataPoint, KMDataPoint mean)
+        /// <summary>
+        /// Returns the calculated Euclidean Distance between two data points sharing the same properties
+        /// </summary>
+        public static double EuclideanDistance(KMDataPoint dataPoint1, KMDataPoint dataPoint2)
         {
             var distance = 0.0;
 
-            foreach (var property in dataPoint.Properties)
+            foreach (var property in dataPoint1.Properties)
             {
-                distance += Math.Pow(dataPoint.Properties[property.Key] - mean.Properties[property.Key], 2);
+                distance += Math.Pow(dataPoint1.Properties[property.Key] - dataPoint2.Properties[property.Key], 2);
             }
 
             return Math.Sqrt(distance);
         }
 
+        /// <summary>
+        /// Returns the dictionary of properties containing each property's total sum
+        /// </summary>
         public static IDictionary<string, double> CalculatePropertiesSum(List<KMDataPoint> data, IDictionary<string, double> properties)
         {
             var sumsOfProperties = new Dictionary<string, double>();
@@ -70,6 +82,9 @@ namespace Clustering.App.Api.Algorithms
             return sumsOfProperties;
         }
 
+        /// <summary>
+        /// Returns the dictionary of properties containing each property's mean
+        /// </summary>
         public static IDictionary<string, double> CalculatePropertiesMeans(IDictionary<string, double> propertiesSum, int total)
         {
             var meansOfProperties = new Dictionary<string, double>();
@@ -83,6 +98,9 @@ namespace Clustering.App.Api.Algorithms
             return meansOfProperties;
         }
 
+        /// <summary>
+        /// Returns the dictionary of properties containing each property's standard deviation
+        /// </summary>
         public static IDictionary<string, double> CalculateStandardDeviation(List<KMDataPoint> data, IDictionary<string, double> propertiesMeans)
         {
             var sumsPowOfProperties = new Dictionary<string, double>();
@@ -110,6 +128,9 @@ namespace Clustering.App.Api.Algorithms
             return sdOfProperties;
         }
 
+        /// <summary>
+        /// Returns the list of clustered data with PCA applied for 2D graph
+        /// </summary>
         public static List<KMDataPoint> ComputePCA(ref List<KMDataPoint> normalizedDataToCluster, ref List<KMDataPoint> rawDataToCluster)
         {
             var numberOfDataPoints = normalizedDataToCluster.Count();

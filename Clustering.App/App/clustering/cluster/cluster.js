@@ -9,11 +9,13 @@
                 var xs = [];
                 var ys = [];
                 var text = []
+
                 _.each(cluster.dataPoints, function(dp) {
                     xs.push(dp.xValue);
                     ys.push(dp.yValue);
                     text.push(dp.firstName + " " + dp.lastName);
                 });
+
                 return {
                     x: xs,
                     y: ys,

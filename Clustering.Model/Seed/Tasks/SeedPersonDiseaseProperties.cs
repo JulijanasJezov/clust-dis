@@ -16,6 +16,8 @@ namespace Clustering.Model.Seed.Tasks
             {
                 using (var context = new ClusteringContext())
                 {
+                    var associations = new List<PersonDiseasePropertyAssociation>();
+
                     foreach (var person in context.People)
                     {
                         foreach (var diseaseProperty in context.DiseaseProperties)
@@ -34,10 +36,11 @@ namespace Clustering.Model.Seed.Tasks
                                 Score = score
                             };
 
-                            context.PersonDiseasePropertyAssociations.Add(personDiseaseProperty);
+                            associations.Add(personDiseaseProperty);
                         }
                     }
 
+                    context.PersonDiseasePropertyAssociations.AddRange(associations);
                     context.SaveChanges();
                 }
             });

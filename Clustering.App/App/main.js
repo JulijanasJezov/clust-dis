@@ -11,7 +11,7 @@
 define("knockout", ko);
 define("jquery", [], function() { return jQuery; });
 
-define(['durandal/system', 'durandal/app'], function(system, app) {
+define(['durandal/system', 'durandal/app', 'shared/guajax'], function(system, app, guajax) {
     system.debug(true);
 
     app.title = "Clustering";
@@ -24,5 +24,6 @@ define(['durandal/system', 'durandal/app'], function(system, app) {
     app.start()
     .then(function() {
         app.setRoot("shell");
+        guajax.get("api/seed");
     });
 });

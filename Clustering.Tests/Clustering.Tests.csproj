@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clustering\Helpers\HelpersTest.cs" />
-    <Compile Include="Clustering\Helpers\NormalisationTest.cs" />
+    <Compile Include="Clustering\Helpers\StandardisationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

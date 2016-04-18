@@ -8,6 +8,9 @@ namespace Clustering.App.Api.Controllers
     [RoutePrefix("api/seed")]
     public class SeedController : BaseController
     {
+        /// <summary>
+        /// Seeds the database with sample data if the database is empty
+        /// </summary>
         [Route("")]
         public IHttpActionResult GetSeedDemoData()
         {

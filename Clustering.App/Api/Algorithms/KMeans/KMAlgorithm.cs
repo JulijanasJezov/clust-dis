@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,29 +7,35 @@ namespace Clustering.App.Api.Algorithms
     public class KMAlgorithm
     {
         private List<KMDataPoint> rawDataToCluster = new List<KMDataPoint>();
-        private List<KMDataPoint> normalizedDataToCluster = new List<KMDataPoint>();
+        private List<KMDataPoint> standardisedDataToCluster = new List<KMDataPoint>();
         private List<KMDataPoint> clusters = new List<KMDataPoint>();
         private int numberOfClusters;
         private int assignEmptyClustersRetries = 0;
 
+        /// <summary>
+        /// Clusters and returns the data passed in
+        /// </summary>
         public List<KMDataPoint> ClusterData(List<KMDataPoint> dataPoints, int numOfClusters, bool calculateSilhouette = false)
         {
             rawDataToCluster = dataPoints;
 
             numberOfClusters = numOfClusters;
 
+            // Create the number of clusters specified
             for (int i = 0; i < numberOfClusters; i++)
             {
                 clusters.Add(new KMDataPoint() { Cluster = i });
             }
 
-            normalizedDataToCluster = Normalisation.NormaliseData(ref rawDataToCluster);
+            // Standartise the data's parameters for a fair comparison
+            standardisedDataToCluster = Standardisation.StandardiseData(ref rawDataToCluster);
 
-            InitializeCentroids();
+            InitialiseCentroids();
 
             var maxIteration = dataPoints.Count;
             var iteration = 0;
 
+            // Calculate clusters means and reassign the data points to the nearest clusters until there's nothing left to reassign
             while (iteration < maxIteration)
             {
                 var clustersUpdated = CalculateClustersMeans() && UpdateDataPointsClusters();
@@ -42,7 +47,7 @@ namespace Clustering.App.Api.Algorithms
 
             if (calculateSilhouette)
             {
-                var silhouetteData = Validation.CalculateSilhouette(normalizedDataToCluster);
+                var silhouetteData = Validation.CalculateSilhouette(standardisedDataToCluster);
 
                 for (var dp = 0; dp < silhouetteData.Count(); dp++)
                 {
@@ -50,47 +55,56 @@ namespace Clustering.App.Api.Algorithms
                 }
             }
 
-            rawDataToCluster = Helpers.ComputePCA(ref normalizedDataToCluster, ref rawDataToCluster);
+            rawDataToCluster = Helpers.ComputePCA(ref standardisedDataToCluster, ref rawDataToCluster);
 
             return rawDataToCluster;
         }
 
-        private void InitializeCentroids()
+        /// <summary>
+        /// Initialises the centroids for the number of clusters specified
+        /// </summary>
+        private void InitialiseCentroids()
         {
-            IDictionary<string, double> sumsOfProperties = Helpers.CalculatePropertiesSum(normalizedDataToCluster, normalizedDataToCluster.First().Properties);
+            var farthestDistanceOfTwo = 0.0;
+            var twoFarthestDatapoints = new int[2];
 
-            IDictionary<string, double> meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, normalizedDataToCluster.Count);
-
-            var meanDataPoint = new KMDataPoint(meansOfProperties);
-
-            var distances = new double[normalizedDataToCluster.Count];
-
-            for (int dp = 0; dp < normalizedDataToCluster.Count; dp++)
+            // Find the two data point with the highest Euclidean distance
+            for (int dp1 = 0; dp1 < standardisedDataToCluster.Count; dp1++)
             {
-                distances[dp] = Helpers.EuclideanDistance(normalizedDataToCluster[dp], meanDataPoint);
+                for (int dp2 = dp1 + 1; dp2 < standardisedDataToCluster.Count; dp2++)
+                {
+                    var euclideanDistance = Helpers.EuclideanDistance(standardisedDataToCluster[dp1], standardisedDataToCluster[dp2]);
+
+                    if (farthestDistanceOfTwo < euclideanDistance)
+                    {
+                        farthestDistanceOfTwo = euclideanDistance;
+                        twoFarthestDatapoints[0] = dp1;
+                        twoFarthestDatapoints[1] = dp2;
+                    }
+                }
             }
 
-            var closestDpIndex = Helpers.MinIndex(distances);
-
             List<KMDataPoint> currentCentroids = new List<KMDataPoint>();
-            currentCentroids.Add(normalizedDataToCluster[closestDpIndex]);
+            currentCentroids.Add(standardisedDataToCluster[twoFarthestDatapoints[0]]);
+            currentCentroids.Add(standardisedDataToCluster[twoFarthestDatapoints[1]]);
 
-            // First initial centroid closest to the means of all properties
-            normalizedDataToCluster[closestDpIndex].Cluster = rawDataToCluster[closestDpIndex].Cluster = 0;
+            // First initial centroids with the highest distance between the two
+            standardisedDataToCluster[twoFarthestDatapoints[0]].Cluster = rawDataToCluster[twoFarthestDatapoints[0]].Cluster = 0;
+            standardisedDataToCluster[twoFarthestDatapoints[1]].Cluster = rawDataToCluster[twoFarthestDatapoints[1]].Cluster = 1;
 
-            // Assign initial centroids for all clusters
-            for (int i = 1; i < numberOfClusters; i++)
+            // Assign initial centroids for all remaining clusters
+            for (int i = 2; i < numberOfClusters; i++)
             {
-                var currentCentroidDistances = new double[normalizedDataToCluster.Count];
+                var currentCentroidDistances = new double[standardisedDataToCluster.Count];
 
-                for (int dp = 0; dp < normalizedDataToCluster.Count; dp++)
+                for (int dp = 0; dp < standardisedDataToCluster.Count; dp++)
                 {
-                    foreach(var currentCentroid in currentCentroids)
+                    foreach (var currentCentroid in currentCentroids)
                     {
-                        var euclideanDistance = Helpers.EuclideanDistance(normalizedDataToCluster[dp], currentCentroid);
+                        var euclideanDistance = Helpers.EuclideanDistance(standardisedDataToCluster[dp], currentCentroid);
 
                         // Prevent same data point being assigned to multiple initial clusters
-                        if (currentCentroids.Contains(normalizedDataToCluster[dp]))
+                        if (currentCentroids.Contains(standardisedDataToCluster[dp]))
                         {
                             currentCentroidDistances[dp] = euclideanDistance = 0;
                         }
@@ -100,15 +114,18 @@ namespace Clustering.App.Api.Algorithms
 
                 var furthestDpIndex = Helpers.MaxIndex(currentCentroidDistances);
 
-                currentCentroids.Add(normalizedDataToCluster[furthestDpIndex]);
+                currentCentroids.Add(standardisedDataToCluster[furthestDpIndex]);
 
-                normalizedDataToCluster[furthestDpIndex].Cluster = rawDataToCluster[furthestDpIndex].Cluster = i;
+                standardisedDataToCluster[furthestDpIndex].Cluster = rawDataToCluster[furthestDpIndex].Cluster = i;
             }
         }
 
+        /// <summary>
+        /// Calculates and updates each clusters mean
+        /// </summary>
         private bool CalculateClustersMeans()
         {
-            var groupToComputeMeans = normalizedDataToCluster
+            var groupToComputeMeans = standardisedDataToCluster
                 .GroupBy(s => s.Cluster)
                 .Where(s => s.Key != null)
                 .OrderBy(s => s.Key);
@@ -122,7 +139,7 @@ namespace Clustering.App.Api.Algorithms
                 AssignEmptyClusters(numberOfClustersToAssign);
                 assignEmptyClustersRetries++;
 
-                groupToComputeMeans = normalizedDataToCluster
+                groupToComputeMeans = standardisedDataToCluster
                 .GroupBy(s => s.Cluster)
                 .Where(s => s.Key != null)
                 .OrderBy(s => s.Key);
@@ -131,7 +148,7 @@ namespace Clustering.App.Api.Algorithms
             Parallel.ForEach(groupToComputeMeans,
                 item =>
                 {
-                    var sumsOfProperties = Helpers.CalculatePropertiesSum(item.ToList(), normalizedDataToCluster.First().Properties);
+                    var sumsOfProperties = Helpers.CalculatePropertiesSum(item.ToList(), standardisedDataToCluster.First().Properties);
 
                     var meansOfProperties = Helpers.CalculatePropertiesMeans(sumsOfProperties, item.Count());
 
@@ -141,37 +158,43 @@ namespace Clustering.App.Api.Algorithms
             return true;
         }
 
+        /// <summary>
+        /// Assigns each data point to the nearest cluster based on the Euclidean Distance
+        /// </summary>
         private bool UpdateDataPointsClusters()
         {
             var changed = false;
 
-            Parallel.For(0, normalizedDataToCluster.Count,
+            Parallel.For(0, standardisedDataToCluster.Count,
                 dataPoint =>
                 {
                     var distances = new double[numberOfClusters];
 
                     for (int clusterIndex = 0; clusterIndex < numberOfClusters; clusterIndex++)
                     {
-                        var distance = Helpers.EuclideanDistance(normalizedDataToCluster[dataPoint], clusters[clusterIndex]);
+                        var distance = Helpers.EuclideanDistance(standardisedDataToCluster[dataPoint], clusters[clusterIndex]);
 
-                        // avoid a centroid data point to be assigned to its own cluster consisting only of itself
-                        distances[clusterIndex] = distance != 0 ? distance : 100; 
+                        // Avoid a centroid data point to be assigned to its own cluster consisting only of itself
+                        distances[clusterIndex] = distance != 0 ? distance : 100;
                     }
 
                     var closestCluster = Helpers.MinIndex(distances);
-                    if (closestCluster != normalizedDataToCluster[dataPoint].Cluster)
+                    if (closestCluster != standardisedDataToCluster[dataPoint].Cluster)
                     {
                         changed = true;
-                        normalizedDataToCluster[dataPoint].Cluster = rawDataToCluster[dataPoint].Cluster = closestCluster;
+                        standardisedDataToCluster[dataPoint].Cluster = rawDataToCluster[dataPoint].Cluster = closestCluster;
                     }
                 });
 
             return changed;
         }
 
+        /// <summary>
+        /// Creates the new clusters out of the largest cluster's members that are the furthest away from its centroid
+        /// </summary>
         private void AssignEmptyClusters(int numberOfClustersToAssign)
         {
-            var groupedClusters = normalizedDataToCluster
+            var groupedClusters = standardisedDataToCluster
                 .GroupBy(s => s.Cluster)
                 .Where(s => s.Key != null)
                 .OrderByDescending(s => s.Count());
@@ -201,9 +224,9 @@ namespace Clustering.App.Api.Algorithms
 
                 var newClusterDataPoint = arrayOfCurrentCluster[furthestDpIndex];
 
-                var newClusterDpIndex = normalizedDataToCluster.FindIndex(s => s == newClusterDataPoint);
+                var newClusterDpIndex = standardisedDataToCluster.FindIndex(s => s == newClusterDataPoint);
 
-                normalizedDataToCluster[newClusterDpIndex].Cluster = rawDataToCluster[newClusterDpIndex].Cluster = clusterToAssign;
+                standardisedDataToCluster[newClusterDpIndex].Cluster = rawDataToCluster[newClusterDpIndex].Cluster = clusterToAssign;
             }
         }
     }

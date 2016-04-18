@@ -63,6 +63,8 @@
         exports.search = function() {
             if (!exports.searchValue()) return;
             var results = [];
+
+            // search for the person in all of the clusters
             _.each(exports.clusteredData(), function(cluster) {
                 results.push(_.filter(cluster.dataPoints, function(person) {
                     var firstName = person.firstName.toLowerCase();
@@ -72,6 +74,7 @@
                         || firstName + ' ' + lastName == searchVal;
                 }));
             });
+
             results = _.flatten(results);
             exports.searchResults(results);
         };

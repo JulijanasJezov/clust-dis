@@ -12,6 +12,9 @@ namespace Clustering.App.Api.Controllers
     [RoutePrefix("api/people")]
     public class PeopleController : BaseController
     {
+        /// <summary>
+        /// Returns a list of of people
+        /// </summary>
         [Route("")]
         public IHttpActionResult GetPeople(
             int pageNumber = 1,
@@ -56,6 +59,9 @@ namespace Clustering.App.Api.Controllers
             return ApiOk(pagedModel);
         }
 
+        /// <summary>
+        /// Creates a new person
+        /// </summary>
         [Route("")]
         public IHttpActionResult PostPerson(PersonApiModel person)
         {
@@ -99,6 +105,9 @@ namespace Clustering.App.Api.Controllers
             return ApiOk();
         }
 
+        /// <summary>
+        /// Updates an existing person
+        /// </summary>
         [Route("{personId}")]
         public IHttpActionResult PatchPerson(int personId, PersonApiModel updatePerson)
         {
@@ -158,6 +167,9 @@ namespace Clustering.App.Api.Controllers
             return ApiOk();
         }
 
+        /// <summary>
+        /// Returns a single person
+        /// </summary>
         [Route("{personId}")]
         public IHttpActionResult GetPerson(int personId)
         {
